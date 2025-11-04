@@ -1,0 +1,376 @@
+
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto ;
+  padding: 0; 
+ min-height: 100vh;   
+}
+
+.login {
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  min-height: 417px;
+}
+
+#fondologin {
+  object-fit: contain;
+  width: 50%;
+  height: auto;
+}
+
+.login2 {
+  background: linear-gradient(to top, #34699A, #124170);
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  min-height: 417px;
+}
+
+body {
+  background: linear-gradient(to bottom, #18263E, #154D71);
+  margin: 0;
+}
+
+.login2 h2 {
+  color: black;
+  margin-bottom: 2rem;
+}
+
+#iniciarlogin {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+#iniciarlogin input {
+  padding: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border-radius: 4px;
+}
+
+#iniciarlogin input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+#iniciarlogin button {
+  padding: 0.5rem 2rem;
+  background-color: #1a1a1a;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#iniciarlogin button:hover {
+  background-color: #2a2a2a;
+}
+#iniciarlogin {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+}
+
+#iniciarlogin input {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+#iniciarlogin button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+}
+nav ul{
+  display: flex;
+  gap: 2em;
+ justify-content: space-around;
+ 
+  
+}
+nav{
+  background-color:#DD8C1D;
+  margin: 0;
+  padding: 1.5rem;
+  width: 200vh;
+}
+#encabezado{
+  margin-top:0px;
+  background-color: #ada423;
+}
+#lst {
+  cursor: pointer;
+}
+.tabla-container {
+  padding: 2rem;
+  color: white;
+}
+
+.tabla-container h2 {
+  color: #DD8C1D;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Controles superiores */
+.controles-superiores {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.selector-producto {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.selector-producto label {
+  font-weight: bold;
+  color: #DD8C1D;
+}
+
+.selector-producto select {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  border: 2px solid #DD8C1D;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.selector-producto select option {
+  background-color: #18263E;
+  color: white;
+}
+
+.botones-accion {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-registrar-tipo,
+.btn-agregar-producto {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-registrar-tipo {
+  background-color: #28a745;
+  color: white;
+}
+
+.btn-registrar-tipo:hover {
+  background-color: #218838;
+}
+
+.btn-agregar-producto {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-agregar-producto:hover {
+  background-color: #0056b3;
+}
+
+/* Formularios modales */
+.formulario-modal {
+  background-color: rgba(221, 140, 29, 0.2);
+  border: 2px solid #DD8C1D;
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.formulario-modal h3 {
+  color: #DD8C1D;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.formulario-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.formulario-modal input,
+.formulario-modal select {
+  padding: 0.75rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+}
+
+.formulario-modal input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.formulario-modal select option {
+  background-color: #18263E;
+  color: white;
+}
+
+.btn-guardar {
+  padding: 0.75rem;
+  background-color: #DD8C1D;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-guardar:hover {
+  background-color: #c27a18;
+}
+
+/* Tabla */
+.tabla-wrapper {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.tabla-productos {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.tabla-productos thead {
+  background-color: #DD8C1D;
+}
+
+.tabla-productos th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: bold;
+  color: white;
+}
+
+.tabla-productos td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tabla-productos tbody tr {
+  transition: background-color 0.3s;
+}
+
+.tabla-productos tbody tr:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Filas con alertas */
+.tabla-productos tr.proximo-caducar {
+  background-color: rgba(255, 193, 7, 0.2);
+}
+
+.tabla-productos tr.caducado {
+  background-color: rgba(220, 53, 69, 0.2);
+}
+
+/* Badges */
+.badge-caducado,
+.badge-proximo {
+  display: inline-block;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+
+.badge-caducado {
+  background-color: #dc3545;
+  color: white;
+}
+
+.badge-proximo {
+  background-color: #ffc107;
+  color: #000;
+}
+
+/* Botón vender */
+.btn-vender {
+  padding: 0.5rem 1rem;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
+.btn-vender:hover {
+  background-color: #218838;
+}
+
+/* Tabla vacía */
+.tabla-vacia {
+  text-align: center;
+  padding: 3rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.tabla-vacia p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .controles-superiores {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .selector-producto {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .botones-accion {
+    flex-direction: column;
+  }
+
+  .tabla-wrapper {
+    overflow-x: scroll;
+  }
+
+  .tabla-productos {
+    font-size: 0.85rem;
+  }
+
+  .tabla-productos th,
+  .tabla-productos td {
+    padding: 0.5rem;
+  }
+}
