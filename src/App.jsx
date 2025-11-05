@@ -4,7 +4,9 @@ import Login from './components/Login'
 import Dashboard from './components/Dashboard'
 import { onAuthStateChanged } from 'firebase/auth'  
 import { auth } from './config/firebase'
-import Tabla from './components/Tabla' 
+import Tabla from './components/Tabla'
+import HistorialVentas from './components/HistorialVentas'
+import Contactos from './components/Contactos'
 
 function App() {
   const [user, setUser] = useState(null)
@@ -35,9 +37,9 @@ function App() {
         case "Productos":
           return <Tabla user={user} />
         case "Historial":
-          return <p>aqui abra el historial de contenido</p>
+          return <HistorialVentas user ={user} />
         case "Contactos":
-          return <p>aqui estara la seccion para contactar con con los otros</p>
+          return <Contactos user={user} />
 
       }
   }
@@ -59,8 +61,8 @@ function App() {
            </ul>
           </nav>
          
-          <p>Bienvenido: {user.displayName}</p>  
-          <button onClick={() => auth.signOut()}>Cerrar Sesión</button>  
+          
+          <button id = "closelogin" onClick={() => auth.signOut()}>Cerrar Sesión</button>  
           <div className = "mainSection">{renderContent()}</div>
         </div>
       )}
