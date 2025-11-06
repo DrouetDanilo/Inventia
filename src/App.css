@@ -189,6 +189,16 @@ nav ul li.active {
   cursor: pointer;
 }
 
+/* ============ PREVENIR SCROLL HORIZONTAL ============ */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+  width: 100%;
+}
+
 /* ============ RESPONSIVE MOBILE ============ */
 
 /* Tablets y pantallas medianas (768px - 1024px) */
@@ -528,5 +538,632 @@ nav ul li.active {
   .btn-enviar-whatsapp {
     padding: 0.85rem;
     font-size: 1rem;
+  }
+}
+/* ============ RESPONSIVE MOBILE MEJORADO ============ */
+
+/* Tablets y pantallas medianas (768px - 1024px) */
+@media (max-width: 1024px) {
+  #root {
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .App {
+    overflow-x: hidden;
+  }
+
+  nav {
+    padding: 1rem;
+  }
+
+  nav ul {
+    gap: 1em;
+  }
+
+  /* Historial */
+  .historial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .historial-controles {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filtro-tiempo,
+  .selector-fecha {
+    width: 100%;
+  }
+
+  .filtro-tiempo select,
+  .selector-fecha input {
+    width: 100%;
+  }
+
+  /* Contactos */
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .distribuidores-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+/* ============ MÓVILES (hasta 768px) ============ */
+@media (max-width: 768px) {
+  /* Prevenir scroll horizontal */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  #root {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  .App {
+    overflow-x: hidden;
+    width: 100%;
+  }
+
+  .mainSection {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100vw;
+  }
+
+  /* ========== LOGIN ========== */
+  .login {
+    flex-direction: column;
+    min-height: auto;
+    width: 100%;
+  }
+
+  #fondologin {
+    width: 100%;
+    min-height: 200px;
+    object-fit: cover;
+  }
+
+  .login2 {
+    width: 100%;
+    min-height: auto;
+    padding: 2rem 1rem;
+  }
+
+  .login2 h2 {
+    font-size: 1.5rem;
+  }
+
+  #iniciarlogin {
+    max-width: 100%;
+    padding: 0 1rem;
+  }
+
+  #iniciarlogin input,
+  #iniciarlogin button {
+    font-size: 1rem;
+  }
+
+  /* ========== NAVEGACIÓN ========== */
+  nav {
+    padding: 0.75rem 0.5rem;
+    width: 100%;
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: stretch;
+    padding: 0;
+  }
+
+  nav ul li {
+    text-align: center;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  /* ========== ENCABEZADO ========== */
+  #encabezado {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+    margin: 0.5rem 0;
+  }
+
+  #closelogin {
+    margin: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+
+  /* ========== CONTENEDORES GENERALES ========== */
+  .tabla-container,
+  .dashboard-container,
+  .historial-container,
+  .contactos-container {
+    padding: 1rem 0.75rem;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+
+  .tabla-container h2,
+  .dashboard-title,
+  .historial-title,
+  .contactos-title {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  /* ========== TABLA DE PRODUCTOS ========== */
+  .controles-superiores {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .selector-producto {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.5rem;
+  }
+
+  .selector-producto label {
+    font-size: 0.9rem;
+  }
+
+  .selector-producto select {
+    width: 100%;
+    min-width: unset;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .botones-accion {
+    flex-direction: column;
+    width: 100%;
+    gap: 0.75rem;
+  }
+
+  .botones-accion button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  /* ========== FORMULARIOS ========== */
+  .formulario-modal,
+  .formulario-distribuidor {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .formulario-modal h3,
+  .formulario-distribuidor h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+  }
+
+  .formulario-modal form {
+    max-width: 100%;
+    gap: 0.75rem;
+  }
+
+  .formulario-modal input,
+  .formulario-modal select,
+  .form-group input,
+  .form-group select {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .btn-guardar,
+  .btn-guardar-distribuidor {
+    padding: 0.85rem;
+    font-size: 1rem;
+  }
+
+  /* Grid de formulario */
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* ========== TABLAS ========== */
+  .tabla-wrapper {
+    padding: 0.5rem;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabla-productos {
+    font-size: 0.8rem;
+    min-width: 650px;
+  }
+
+  .tabla-productos th,
+  .tabla-productos td {
+    padding: 0.5rem 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  .tabla-productos td button {
+    padding: 0.4rem 0.6rem;
+    font-size: 0.8rem;
+    margin: 0.2rem;
+  }
+
+  .tabla-vacia {
+    padding: 2rem 1rem;
+  }
+
+  .tabla-vacia p {
+    font-size: 0.95rem;
+  }
+
+  /* ========== DASHBOARD ========== */
+  .dashboard-table {
+    font-size: 0.8rem;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .dashboard-th,
+  .dashboard-td {
+    padding: 0.6rem 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  /* ========== HISTORIAL DE VENTAS ========== */
+  .historial-controles {
+    padding: 1rem;
+    gap: 1rem;
+    flex-direction: column;
+  }
+
+  .filtro-tiempo,
+  .selector-fecha {
+    width: 100%;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .filtro-tiempo label,
+  .selector-fecha label {
+    font-size: 0.9rem;
+  }
+
+  .filtro-tiempo select,
+  .selector-fecha input {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .total-periodo {
+    padding: 0.75rem;
+    font-size: 0.95rem;
+    text-align: center;
+    width: 100%;
+  }
+
+  .historial-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .resumen-productos-card,
+  .ventas-detalle-card {
+    padding: 1rem;
+  }
+
+  .resumen-productos-card h3,
+  .ventas-detalle-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .resumen-lista {
+    max-height: 350px;
+  }
+
+  .producto-resumen-item {
+    padding: 0.75rem;
+  }
+
+  .producto-nombre {
+    font-size: 0.95rem;
+  }
+
+  .producto-marca {
+    font-size: 0.8rem;
+  }
+
+  .producto-stats {
+    flex-direction: row;
+    gap: 0.75rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  .stat-valor {
+    font-size: 1rem;
+  }
+
+  .tabla-wrapper-historial {
+    max-height: 350px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .tabla-historial {
+    font-size: 0.8rem;
+    min-width: 650px;
+  }
+
+  .tabla-historial th,
+  .tabla-historial td {
+    padding: 0.6rem 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  .fecha-cell {
+    font-size: 0.75rem;
+  }
+
+  /* ========== CONTACTOS/DISTRIBUIDORES ========== */
+  .contactos-header {
+    margin-bottom: 1rem;
+    padding: 0 0.5rem;
+  }
+
+  .btn-nuevo-distribuidor {
+    width: 100%;
+    padding: 0.85rem;
+    font-size: 0.95rem;
+  }
+
+  .distribuidores-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0 0.25rem;
+  }
+
+  .distribuidor-card {
+    padding: 1rem;
+  }
+
+  .distribuidor-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+  }
+
+  .distribuidor-marca-badge {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.7rem;
+  }
+
+  .distribuidor-info h3 {
+    font-size: 1.1rem;
+  }
+
+  .empresa-nombre {
+    font-size: 0.85rem;
+  }
+
+  .detalle-item {
+    font-size: 0.85rem;
+  }
+
+  .detalle-icono {
+    font-size: 1rem;
+  }
+
+  .btn-hacer-pedido {
+    padding: 0.85rem;
+    font-size: 0.95rem;
+  }
+
+  /* ========== MODAL DE PEDIDO ========== */
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+
+  .modal-pedido {
+    padding: 1rem;
+    max-height: 92vh;
+    width: calc(100% - 1rem);
+    max-width: 100%;
+  }
+
+  .modal-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .modal-header h3 {
+    font-size: 1.2rem;
+  }
+
+  .btn-cerrar-modal {
+    font-size: 1.5rem;
+    width: 30px;
+    height: 30px;
+  }
+
+  .pedido-info {
+    padding: 0.75rem;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .pedido-info p {
+    font-size: 0.85rem;
+  }
+
+  .pedido-productos h4 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .pedido-producto-item {
+    padding: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .producto-pedido-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .producto-pedido-nombre {
+    font-size: 0.9rem;
+  }
+
+  .producto-pedido-precio {
+    font-size: 0.9rem;
+  }
+
+  .cantidad-control {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .btn-cantidad {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+  }
+
+  .input-cantidad {
+    width: 70px;
+    padding: 0.4rem;
+    font-size: 0.9rem;
+  }
+
+  .subtotal-item {
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+
+  .pedido-total {
+    font-size: 1.1rem;
+    padding: 0.85rem;
+    margin: 1rem 0;
+  }
+
+  .btn-enviar-whatsapp {
+    padding: 0.85rem;
+    font-size: 1rem;
+  }
+}
+
+/* ============ MÓVILES PEQUEÑOS (hasta 480px) ============ */
+@media (max-width: 480px) {
+  .tabla-container h2,
+  .dashboard-title,
+  .historial-title,
+  .contactos-title {
+    font-size: 1.2rem;
+  }
+
+  .tabla-productos,
+  .tabla-historial,
+  .dashboard-table {
+    min-width: 600px;
+    font-size: 0.75rem;
+  }
+
+  .tabla-productos th,
+  .tabla-productos td,
+  .tabla-historial th,
+  .tabla-historial td,
+  .dashboard-th,
+  .dashboard-td {
+    padding: 0.4rem 0.3rem;
+    font-size: 0.75rem;
+  }
+
+  .controles-superiores,
+  .historial-controles {
+    padding: 0.75rem;
+  }
+
+  .formulario-modal,
+  .formulario-distribuidor {
+    padding: 0.75rem;
+  }
+
+  .modal-pedido {
+    padding: 0.75rem;
+  }
+
+  .btn-cantidad {
+    width: 28px;
+    height: 28px;
+    font-size: 0.9rem;
+  }
+
+  .input-cantidad {
+    width: 60px;
+    font-size: 0.85rem;
+  }
+}
+
+/* ============ SCROLL HORIZONTAL HINT ============ */
+@media (max-width: 768px) {
+  .tabla-wrapper::after,
+  .tabla-wrapper-historial::after {
+    content: "← Desliza para ver más →";
+    display: block;
+    text-align: center;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.5);
+    font-style: italic;
+  }
+
+  /* Mejorar el scroll en móvil */
+  .tabla-wrapper,
+  .tabla-wrapper-historial {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Scrollbar más visible en móvil */
+  .tabla-wrapper::-webkit-scrollbar,
+  .tabla-wrapper-historial::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .tabla-wrapper::-webkit-scrollbar-thumb,
+  .tabla-wrapper-historial::-webkit-scrollbar-thumb {
+    background: #FF6B35;
+    border-radius: 3px;
   }
 }
