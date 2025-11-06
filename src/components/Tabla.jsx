@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { database } from '../config/firebase'
 import { ref, push, set, onValue, remove } from 'firebase/database'
-import '../App.css'
+import '../styles/Tabla.css'
 import AsistenteVoz from './AsistenteVoz'
 
 function Tabla({ user }) {

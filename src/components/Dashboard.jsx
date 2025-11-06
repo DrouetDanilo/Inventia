@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import "../styles/Dashboard.css"
 import { ref, onValue } from 'firebase/database'
 import { database } from '../config/firebase'
 

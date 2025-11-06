@@ -1,0 +1,267 @@
+/* ============ TABLA CONTAINER ============ */
+.tabla-container {
+  padding: 2rem;
+  color: white;
+}
+
+.tabla-container h2 {
+  color: #FF6B35;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 2rem;
+}
+
+/* Controles superiores */
+.controles-superiores {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.selector-producto {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.selector-producto label {
+  font-weight: bold;
+  color: #F7B801;
+  font-size: 1rem;
+}
+
+.selector-producto select {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 2px solid #FF6B35;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.selector-producto select:hover {
+  border-color: #F7B801;
+}
+
+.selector-producto select option {
+  background-color: #1A1A2E;
+  color: white;
+}
+
+.botones-accion {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-registrar-tipo,
+.btn-agregar-producto {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1rem;
+}
+
+.btn-registrar-tipo {
+  background-color: #00BA88;
+  color: white;
+}
+
+.btn-registrar-tipo:hover {
+  background-color: #009b70;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 186, 136, 0.4);
+}
+
+.btn-agregar-producto {
+  background-color: #004E89;
+  color: white;
+}
+
+.btn-agregar-producto:hover {
+  background-color: #003d6b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 78, 137, 0.4);
+}
+
+/* Formularios modales */
+.formulario-modal {
+  background-color: rgba(255, 107, 53, 0.15);
+  border: 2px solid #FF6B35;
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.formulario-modal h3 {
+  color: #FF6B35;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.formulario-modal form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.formulario-modal input,
+.formulario-modal select {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s;
+}
+
+.formulario-modal input:focus,
+.formulario-modal select:focus {
+  outline: none;
+  border-color: #FF6B35;
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.formulario-modal input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.formulario-modal select option {
+  background-color: #1A1A2E;
+  color: white;
+}
+
+.btn-guardar {
+  padding: 0.75rem;
+  background-color: #FF6B35;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 1.1rem;
+}
+
+.btn-guardar:hover {
+  background-color: #e85a2a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+}
+
+/* Tabla */
+.tabla-wrapper {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1rem;
+  overflow-x: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.tabla-productos {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  overflow: hidden;
+  min-width: 800px;
+}
+
+.tabla-productos thead {
+  background-color: #FF6B35;
+}
+
+.tabla-productos th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: bold;
+  color: white;
+  font-size: 1rem;
+}
+
+.tabla-productos td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tabla-productos tbody tr {
+  transition: background-color 0.3s;
+}
+
+.tabla-productos tbody tr:hover {
+  background-color: rgba(255, 107, 53, 0.1);
+}
+
+/* Filas con alertas */
+.tabla-productos tr.proximo-caducar {
+  background-color: rgba(247, 184, 1, 0.2);
+}
+
+.tabla-productos tr.caducado {
+  background-color: rgba(220, 53, 69, 0.2);
+}
+
+/* Badges */
+.badge-caducado,
+.badge-proximo {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  margin-left: 0.5rem;
+}
+
+.badge-caducado {
+  background-color: #dc3545;
+  color: white;
+}
+
+.badge-proximo {
+  background-color: #F7B801;
+  color: #1A1A2E;
+}
+
+/* Botón vender */
+.btn-vender {
+  padding: 0.5rem 1rem;
+  background-color: #00BA88;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.btn-vender:hover {
+  background-color: #009b70;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 186, 136, 0.4);
+}
+
+/* Tabla vacía */
+.tabla-vacia {
+  text-align: center;
+  padding: 3rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.tabla-vacia p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}

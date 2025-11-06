@@ -1,0 +1,82 @@
+/* ============ DASHBOARD ============ */
+.dashboard-container {
+  padding: 2rem;
+  color: white;
+}
+
+.dashboard-title {
+  color: #FF6B35;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.dashboard-table-header {
+  background-color: #FF6B35;
+}
+
+.dashboard-th {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  color: white;
+  font-weight: bold;
+}
+
+.dashboard-th-left {
+  text-align: left;
+}
+
+.dashboard-th-center {
+  text-align: center;
+}
+
+.dashboard-th-right {
+  text-align: right;
+}
+
+.dashboard-table-row {
+  transition: background-color 0.3s;
+}
+
+.dashboard-table-row:hover {
+  background-color: rgba(255, 107, 53, 0.1);
+}
+
+.dashboard-row-even {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.dashboard-row-odd {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.dashboard-td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  color: white;
+}
+
+.dashboard-td-center {
+  text-align: center;
+}
+
+.dashboard-td-right {
+  text-align: right;
+}
+
+.dashboard-loading {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 3rem;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+}

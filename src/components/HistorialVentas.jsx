@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
+import '../styles/HistorialVentas.css'
 import { ref, onValue } from 'firebase/database'
 import { database } from '../config/firebase'
+
 
 function HistorialVentas({ user }) {
   const [historialVentas, setHistorialVentas] = useState([])

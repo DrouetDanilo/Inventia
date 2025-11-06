@@ -1,0 +1,273 @@
+/* ============ HISTORIAL DE VENTAS ============ */
+.historial-container {
+  padding: 2rem;
+  color: white;
+}
+
+.historial-title {
+  color: #FF6B35;
+  margin-bottom: 2rem;
+  text-align: center;
+  font-size: 2rem;
+}
+
+.historial-controles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 107, 53, 0.3);
+}
+
+.filtro-tiempo,
+.selector-fecha {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.filtro-tiempo label,
+.selector-fecha label {
+  color: #F7B801;
+  font-weight: bold;
+}
+
+.filtro-tiempo select,
+.selector-fecha input {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 2px solid #FF6B35;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.filtro-tiempo select:hover,
+.selector-fecha input:hover {
+  border-color: #F7B801;
+}
+
+.filtro-tiempo select option {
+  background-color: #1A1A2E;
+  color: white;
+}
+
+.total-periodo {
+  background-color: #FF6B35;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.4);
+}
+
+.total-periodo strong {
+  margin-right: 0.5rem;
+}
+
+.historial-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+}
+
+.resumen-productos-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 2px solid rgba(255, 107, 53, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.resumen-productos-card h3 {
+  color: #FF6B35;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.resumen-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.producto-resumen-item {
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+  border-radius: 8px;
+  border-left: 4px solid #FF6B35;
+  transition: all 0.3s;
+}
+
+.producto-resumen-item:hover {
+  transform: translateX(5px);
+  background-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+}
+
+.producto-info {
+  margin-bottom: 0.75rem;
+}
+
+.producto-nombre {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #F7B801;
+  margin-bottom: 0.25rem;
+}
+
+.producto-marca {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.producto-stats {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.stat-valor {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.stat-valor.cantidad {
+  color: #00BA88;
+}
+
+.stat-valor.dinero {
+  color: #F7B801;
+}
+
+.ventas-detalle-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 2px solid rgba(255, 107, 53, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.ventas-detalle-card h3 {
+  color: #FF6B35;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.tabla-wrapper-historial {
+  overflow-x: auto;
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.tabla-historial {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: rgba(255, 255, 255, 0.05);
+  min-width: 700px;
+}
+
+.tabla-historial thead {
+  background-color: #FF6B35;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.tabla-historial th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: bold;
+  color: white;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.tabla-historial td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
+.tabla-historial tbody tr {
+  transition: background-color 0.2s;
+}
+
+.tabla-historial tbody tr:hover {
+  background-color: rgba(255, 107, 53, 0.1);
+}
+
+.fecha-cell {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.precio-cell {
+  font-weight: bold;
+  color: #00BA88;
+}
+
+.texto-centro {
+  text-align: center;
+}
+
+.texto-derecha {
+  text-align: right;
+}
+
+.tabla-vacia-historial {
+  text-align: center;
+  padding: 3rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.sin-datos {
+  text-align: center;
+  padding: 2rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Scrollbar personalizado */
+.resumen-lista::-webkit-scrollbar,
+.tabla-wrapper-historial::-webkit-scrollbar {
+  width: 8px;
+}
+
+.resumen-lista::-webkit-scrollbar-track,
+.tabla-wrapper-historial::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.resumen-lista::-webkit-scrollbar-thumb,
+.tabla-wrapper-historial::-webkit-scrollbar-thumb {
+  background: #FF6B35;
+  border-radius: 4px;
+}
+
+.resumen-lista::-webkit-scrollbar-thumb:hover,
+.tabla-wrapper-historial::-webkit-scrollbar-thumb:hover {
+  background: #e85a2a;
+}
