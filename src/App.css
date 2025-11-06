@@ -1,8 +1,22 @@
+/* ============ ROOT Y ESTRUCTURA PRINCIPAL ============ */
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
+  margin: 0;
   padding: 0;
   min-height: 100vh;
+  width: 100%;
+}
+
+.App {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/* Contenedor principal de secciones - ANCHO COMPLETO */
+.mainSection {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 /* ============ LOGIN ============ */
@@ -12,6 +26,8 @@
   align-items: center;
   min-height: 417px;
   flex-direction: row;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 #fondologin {
@@ -23,6 +39,20 @@
 
 #closelogin {
   float: right;
+  margin: 1rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #FF6B35;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+#closelogin:hover {
+  background-color: #e85a2a;
+  transform: translateY(-2px);
 }
 
 .login2 {
@@ -116,6 +146,8 @@ nav ul {
   margin: 0;
   padding: 0;
   flex-wrap: wrap;
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 nav ul li {
@@ -132,6 +164,11 @@ nav ul li:hover {
   transform: scale(1.05);
 }
 
+nav ul li.active {
+  background-color: rgba(255, 255, 255, 0.3);
+  font-weight: 700;
+}
+
 #welcome {
   justify-content: center;
 }
@@ -141,19 +178,16 @@ nav ul li:hover {
   margin-top: 10px;
   background-color: #F7B801;
   padding: 15px;
-  border-radius: 8px;
+  border-radius: 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
 }
 
 #lst {
   cursor: pointer;
 }
-
-
-
-
-
-
 
 /* ============ RESPONSIVE MOBILE ============ */
 
@@ -496,5 +530,3 @@ nav ul li:hover {
     font-size: 1rem;
   }
 }
-
-

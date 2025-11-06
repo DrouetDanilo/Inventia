@@ -2,6 +2,9 @@
 .tabla-container {
   padding: 2rem;
   color: white;
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
 }
 
 .tabla-container h2 {
@@ -9,9 +12,10 @@
   margin-bottom: 2rem;
   text-align: center;
   font-size: 2rem;
+  width: 100%;
 }
 
-/* Controles superiores */
+/* Controles superiores - FORZAR ANCHO COMPLETO */
 .controles-superiores {
   display: flex;
   justify-content: space-between;
@@ -19,6 +23,12 @@
   margin-bottom: 2rem;
   flex-wrap: wrap;
   gap: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 12px;
+  border: 2px solid rgba(255, 107, 53, 0.3);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .selector-producto {
@@ -26,12 +36,15 @@
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+  flex: 1;
+  min-width: 250px;
 }
 
 .selector-producto label {
   font-weight: bold;
   color: #F7B801;
   font-size: 1rem;
+  white-space: nowrap;
 }
 
 .selector-producto select {
@@ -43,6 +56,8 @@
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s;
+  min-width: 200px;
+  flex: 1;
 }
 
 .selector-producto select:hover {
@@ -58,6 +73,7 @@
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .btn-registrar-tipo,
@@ -69,6 +85,7 @@
   cursor: pointer;
   transition: all 0.3s;
   font-size: 1rem;
+  white-space: nowrap;
 }
 
 .btn-registrar-tipo {
@@ -93,7 +110,7 @@
   box-shadow: 0 4px 12px rgba(0, 78, 137, 0.4);
 }
 
-/* Formularios modales */
+/* Formularios modales - FORZAR ANCHO COMPLETO */
 .formulario-modal {
   background-color: rgba(255, 107, 53, 0.15);
   border: 2px solid #FF6B35;
@@ -101,6 +118,8 @@
   padding: 2rem;
   margin-bottom: 2rem;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .formulario-modal h3 {
@@ -114,8 +133,9 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  max-width: 500px;
+  max-width: 600px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .formulario-modal input,
@@ -127,6 +147,8 @@
   color: white;
   font-size: 1rem;
   transition: all 0.3s;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .formulario-modal input:focus,
@@ -155,6 +177,7 @@
   cursor: pointer;
   transition: all 0.3s;
   font-size: 1.1rem;
+  width: 100%;
 }
 
 .btn-guardar:hover {
@@ -163,13 +186,16 @@
   box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
 }
 
-/* Tabla */
+/* Tabla - FORZAR ANCHO COMPLETO */
 .tabla-wrapper {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 12px;
-  padding: 1rem;
+  padding: 1.5rem;
   overflow-x: auto;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 107, 53, 0.3);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .tabla-productos {
@@ -178,11 +204,13 @@
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   overflow: hidden;
-  min-width: 800px;
 }
 
 .tabla-productos thead {
   background-color: #FF6B35;
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .tabla-productos th {
@@ -191,11 +219,13 @@
   font-weight: bold;
   color: white;
   font-size: 1rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .tabla-productos td {
   padding: 1rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
 }
 
 .tabla-productos tbody tr {
@@ -254,14 +284,63 @@
   box-shadow: 0 4px 12px rgba(0, 186, 136, 0.4);
 }
 
+.btn-vender:disabled {
+  background-color: rgba(0, 186, 136, 0.3);
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* Tabla vacía */
 .tabla-vacia {
   text-align: center;
   padding: 3rem;
   color: rgba(255, 255, 255, 0.6);
+  width: 100%;
 }
 
 .tabla-vacia p {
   margin: 0.5rem 0;
   font-size: 1.1rem;
+}
+
+/* Scrollbar personalizado */
+.tabla-wrapper::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+}
+
+.tabla-wrapper::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.tabla-wrapper::-webkit-scrollbar-thumb {
+  background: #FF6B35;
+  border-radius: 4px;
+}
+
+.tabla-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #e85a2a;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tabla-container {
+    padding: 1rem;
+  }
+  
+  .controles-superiores {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .selector-producto,
+  .botones-accion {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .tabla-productos {
+    min-width: 800px;
+  }
 }
