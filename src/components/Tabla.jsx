@@ -1,5 +1,3 @@
-
-
 import { useState, useEffect } from 'react'
 import { database } from '../config/firebase'
 import { ref, push, set, onValue, remove } from 'firebase/database'
@@ -21,7 +19,8 @@ function Tabla({ user }) {
   const [productoAgregar, setProductoAgregar] = useState({
     plantillaId: '',
     fechaCaducidad: '',
-    slot: ''
+    slot: '',
+    cantidad: 1 // 👈 Nueva propiedad para múltiples productos
   })
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -97,60 +96,81 @@ function Tabla({ user }) {
     }
   }
 
+  // 🔥 FUNCIÓN MODIFICADA: Ahora agrega múltiples productos
   const agregarProductoATabla = async (e) => {
     e.preventDefault()
-    const { plantillaId, fechaCaducidad, slot } = productoAgregar
-    if (!plantillaId || !fechaCaducidad || !slot) {
-      alert('Selecciona una plantilla y completa fecha de caducidad y número de slot')
+    const { plantillaId, fechaCaducidad, slot, cantidad } = productoAgregar
+    
+    if (!plantillaId || !fechaCaducidad || !slot || !cantidad || cantidad < 1) {
+      alert('Selecciona una plantilla, completa fecha de caducidad, número de slot y cantidad válida')
       return
     }
+
     try {
       const plantilla = catalogoProductos.find(p => p.id === plantillaId)
       if (!plantilla) {
         alert('Plantilla no encontrada')
         return
       }
+
       const productosRef = ref(database, `usuarios/${user.uid}/productos`)
-      const nuevoProductoRef = push(productosRef)
-      await set(nuevoProductoRef, {
-        tipoProducto: plantilla.tipoProducto,
-        marcaFabricante: plantilla.marcaFabricante,
-        precio: plantilla.precio,
-        fechaCaducidad,
-        slot,
-        fechaRegistro: new Date().toISOString(),
-        estado: 'disponible'
-      })
-      setProductoAgregar({ plantillaId: '', fechaCaducidad: '', slot: '' })
+      const cantidadNum = parseInt(cantidad)
+
+      // 🔥 Agregar múltiples productos idénticos
+      const promesas = []
+      for (let i = 0; i < cantidadNum; i++) {
+        const nuevoProductoRef = push(productosRef)
+        promesas.push(
+          set(nuevoProductoRef, {
+            tipoProducto: plantilla.tipoProducto,
+            marcaFabricante: plantilla.marcaFabricante,
+            precio: plantilla.precio,
+            fechaCaducidad,
+            slot,
+            fechaRegistro: new Date().toISOString(),
+            estado: 'disponible'
+          })
+        )
+      }
+
+      await Promise.all(promesas)
+
+      setProductoAgregar({ plantillaId: '', fechaCaducidad: '', slot: '', cantidad: 1 })
       setMostrarFormAgregar(false)
-      alert('Producto agregado a la tabla')
+      alert(`${cantidadNum} producto(s) agregado(s) a la tabla`)
     } catch (err) {
-      alert('Error al agregar producto: ' + err.message)
+      alert('Error al agregar productos: ' + err.message)
     }
   }
 
-  const venderProducto = async (producto) => {
-    if (!window.confirm(`¿Deseas vender ${producto.tipoProducto}?`)) return
+  // 🔧 Modificado para aceptar parámetro desdeVoz
+  const venderProducto = async (producto, desdeVoz = false) => {
+    if (!desdeVoz && !window.confirm(`¿Deseas vender ${producto.tipoProducto}?`)) return false
     try {
       const historialRef = ref(database, `usuarios/${user.uid}/historialVentas`)
       const nuevaVentaRef = push(historialRef)
       await set(nuevaVentaRef, { ...producto, fechaVenta: new Date().toISOString() })
       const productoRef = ref(database, `usuarios/${user.uid}/productos/${producto.id}`)
       await remove(productoRef)
-      alert('Producto vendido')
+      if (!desdeVoz) alert('Producto vendido')
+      return true
     } catch (err) {
-      alert('Error al vender: ' + err.message)
+      if (!desdeVoz) alert('Error al vender: ' + err.message)
+      return false
     }
   }
 
-  const eliminarProducto = async (id, nombre) => {
-    if (!window.confirm(`Eliminar "${nombre}" de la tabla?`)) return
+  // 🔧 Modificado para aceptar parámetro desdeVoz
+  const eliminarProducto = async (id, nombre, desdeVoz = false) => {
+    if (!desdeVoz && !window.confirm(`Eliminar "${nombre}" de la tabla?`)) return false
     try {
       const productoRef = ref(database, `usuarios/${user.uid}/productos/${id}`)
       await remove(productoRef)
-      alert('Producto eliminado')
+      if (!desdeVoz) alert('Producto eliminado')
+      return true
     } catch (err) {
-      alert('Error al eliminar: ' + err.message)
+      if (!desdeVoz) alert('Error al eliminar: ' + err.message)
+      return false
     }
   }
 
@@ -186,10 +206,16 @@ function Tabla({ user }) {
         </div>
 
         <div className="botones-accion">
-          <button onClick={() => setMostrarFormCatalogo(!mostrarFormCatalogo)}>
+          <button 
+            className="btn-registrar-tipo"
+            onClick={() => setMostrarFormCatalogo(!mostrarFormCatalogo)}
+          >
             {mostrarFormCatalogo ? 'Cancelar' : '+ Crear Plantilla'}
           </button>
-          <button onClick={() => setMostrarFormAgregar(!mostrarFormAgregar)}>
+          <button 
+            className="btn-agregar-producto"
+            onClick={() => setMostrarFormAgregar(!mostrarFormAgregar)}
+          >
             {mostrarFormAgregar ? 'Cancelar' : '+ Agregar a Tabla'}
           </button>
         </div>
@@ -221,7 +247,7 @@ function Tabla({ user }) {
               onChange={(e) => setNuevoCatalogoProducto({ ...nuevoCatalogoProducto, precio: e.target.value })}
               required
             />
-            <button type="submit">Guardar plantilla</button>
+            <button type="submit" className="btn-guardar">Guardar plantilla</button>
           </form>
         </div>
       )}
@@ -229,7 +255,7 @@ function Tabla({ user }) {
       {mostrarFormAgregar && (
         <div className="formulario-modal">
           <form onSubmit={agregarProductoATabla}>
-            <h3>Agregar Producto a la Tabla</h3>
+            <h3>Agregar Producto(s) a la Tabla</h3>
             <select
               value={productoAgregar.plantillaId}
               onChange={(e) => setProductoAgregar({ ...productoAgregar, plantillaId: e.target.value })}
@@ -255,61 +281,104 @@ function Tabla({ user }) {
               onChange={(e) => setProductoAgregar({ ...productoAgregar, slot: e.target.value })}
               required
             />
-            <button type="submit">Agregar a tabla</button>
+            
+            {/* 🔥 NUEVO CAMPO DE CANTIDAD CON ESTILOS ACORDE AL DISEÑO */}
+            <div style={{ 
+              backgroundColor: 'rgba(247, 184, 1, 0.15)', 
+              padding: '1.5rem', 
+              borderRadius: '8px',
+              border: '2px solid #F7B801',
+              marginTop: '1rem'
+            }}>
+              <label style={{ 
+                display: 'block', 
+                fontWeight: 'bold', 
+                color: '#F7B801',
+                marginBottom: '0.75rem',
+                fontSize: '1rem'
+              }}>
+                🔢 Cantidad de productos a agregar:
+              </label>
+              <input
+                type="number"
+                min="1"
+                max="100"
+                value={productoAgregar.cantidad}
+                onChange={(e) => setProductoAgregar({ ...productoAgregar, cantidad: e.target.value })}
+                required
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  fontSize: '1.1rem',
+                  fontWeight: '600',
+                  textAlign: 'center',
+                  border: '2px solid #F7B801',
+                  borderRadius: '8px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  color: 'white',
+                  boxSizing: 'border-box'
+                }}
+              />
+              <p style={{ 
+                margin: '0.75rem 0 0 0', 
+                fontSize: '0.9rem', 
+                color: '#F7B801',
+                textAlign: 'center',
+                fontWeight: '500'
+              }}>
+                {productoAgregar.cantidad > 1 
+                  ? `✓ Se agregarán ${productoAgregar.cantidad} productos idénticos` 
+                  : 'Se agregará 1 producto'}
+              </p>
+            </div>
+
+            <button type="submit" className="btn-guardar">Agregar a tabla</button>
           </form>
         </div>
       )}
+
       <AsistenteVoz
-  onAgregar={async (nombre, fecha, slot) => {
-    const plantilla = catalogoProductos.find(
-      p => p.tipoProducto.toLowerCase() === nombre.toLowerCase()
-    )
-    if (!plantilla) return false
+        onAgregar={async (nombre, fecha, slot) => {
+          const plantilla = catalogoProductos.find(
+            p => p.tipoProducto.toLowerCase() === nombre.toLowerCase()
+          )
+          if (!plantilla) return false
 
-    try {
-      const productosRef = ref(database, `usuarios/${user.uid}/productos`)
-      const nuevoRef = push(productosRef)
-      await set(nuevoRef, {
-        tipoProducto: plantilla.tipoProducto,
-        marcaFabricante: plantilla.marcaFabricante,
-        precio: plantilla.precio,
-        fechaCaducidad: fecha,
-        slot,
-        fechaRegistro: new Date().toISOString(),
-        estado: 'disponible'
-      })
-      return true
-    } catch {
-      return false
-    }
-  }}
+          try {
+            const productosRef = ref(database, `usuarios/${user.uid}/productos`)
+            const nuevoRef = push(productosRef)
+            await set(nuevoRef, {
+              tipoProducto: plantilla.tipoProducto,
+              marcaFabricante: plantilla.marcaFabricante,
+              precio: plantilla.precio,
+              fechaCaducidad: fecha,
+              slot,
+              fechaRegistro: new Date().toISOString(),
+              estado: 'disponible'
+            })
+            return true
+          } catch {
+            return false
+          }
+        }}
 
-  onVender={async (nombre) => {
-    const producto = productos.find(
-      p => p.tipoProducto.toLowerCase() === nombre.toLowerCase()
-    )
-    if (!producto) return false
-    try {
-      await venderProducto(producto)
-      return true
-    } catch {
-      return false
-    }
-  }}
+        onVender={async (nombre) => {
+          const producto = productos.find(
+            p => p.tipoProducto.toLowerCase() === nombre.toLowerCase()
+          )
+          if (!producto) return false
+          return await venderProducto(producto, true)
+        }}
 
-  onEliminar={async (nombre) => {
-    const producto = productos.find(
-      p => p.tipoProducto.toLowerCase() === nombre.toLowerCase()
-    )
-    if (!producto) return false
-    try {
-      await eliminarProducto(producto.id, producto.tipoProducto)
-      return true
-    } catch {
-      return false
-    }
-  }}
-/>
+        onEliminar={async (nombre) => {
+          const producto = productos.find(
+            p => p.tipoProducto.toLowerCase() === nombre.toLowerCase()
+          )
+          if (!producto) return false
+          return await eliminarProducto(producto.id, producto.tipoProducto, true)
+        }}
+      />
+
       <div className="tabla-wrapper">
         {productosFiltrados.length === 0 ? (
           <div className="tabla-vacia">
@@ -336,10 +405,22 @@ function Tabla({ user }) {
                   <td>{producto.fechaCaducidad ? new Date(producto.fechaCaducidad).toLocaleDateString('es-ES') : '-'}</td>
                   <td>{producto.slot || '-'}</td>
                   <td>
-                    <button onClick={() => venderProducto(producto)}>Vender</button>
+                    <button className="btn-vender" onClick={() => venderProducto(producto)}>
+                      Vender
+                    </button>
                     <button
                       onClick={() => eliminarProducto(producto.id, producto.tipoProducto)}
-                      style={{ marginLeft: '8px', backgroundColor: '#e74c3c', color: 'white' }}
+                      style={{ 
+                        marginLeft: '8px', 
+                        padding: '0.5rem 1rem',
+                        backgroundColor: '#dc3545', 
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        fontWeight: 'bold',
+                        transition: 'all 0.3s'
+                      }}
                     >
                       Eliminar
                     </button>
@@ -355,4 +436,3 @@ function Tabla({ user }) {
 }
 
 export default Tabla
-

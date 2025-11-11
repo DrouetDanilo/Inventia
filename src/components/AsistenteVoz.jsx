@@ -50,8 +50,8 @@ function AsistenteVoz({ onAgregar, onVender, onEliminar }) {
     console.log('📥 Procesando comando:', texto)
 
     if (texto.includes('agregar')) {
-      // Patrón más flexible: "agregar producto [nombre] fecha [fecha] slot [número]"
-      const matchProducto = texto.match(/producto\s+([\wáéíóúñ\s]+?)(?=\s+fecha|\s+slot|$)/i)
+      // Patrón más flexible: acepta "producto" o "productos"
+      const matchProducto = texto.match(/productos?\s+([\wáéíóúñ]+(?:\s+[\wáéíóúñ]+)*?)(?=\s+(?:fecha|slot))/i)
       const producto = matchProducto?.[1]?.trim()
       
       const fecha = parsearFecha(texto)
@@ -217,10 +217,19 @@ function AsistenteVoz({ onAgregar, onVender, onEliminar }) {
       <details style={{ marginTop: '10px', fontSize: '14px', color: '#666' }}>
         <summary style={{ cursor: 'pointer', fontWeight: 'bold' }}>ℹ️ Comandos disponibles</summary>
         <ul style={{ marginTop: '8px' }}>
-          <li>Agregar producto [nombre] fecha [dd/mm/yyyy o "hoy"] slot [número]</li>
-          <li>Vender producto [nombre]</li>
-          <li>Eliminar producto [nombre]</li>
+          <li><strong>Agregar:</strong> "agregar producto [nombre] fecha [dd/mm/yyyy] slot [número]"
+            <br/><em>Ejemplo: agregar producto coca cola fecha 31/12/2025 slot 5</em>
+          </li>
+          <li><strong>Vender:</strong> "vender producto [nombre]"
+            <br/><em>Ejemplo: vender producto coca cola</em>
+          </li>
+          <li><strong>Eliminar:</strong> "eliminar producto [nombre]"
+            <br/><em>Ejemplo: eliminar producto coca cola</em>
+          </li>
         </ul>
+        <p style={{ fontSize: '12px', marginTop: '8px', fontStyle: 'italic' }}>
+          💡 La fecha puede decirse en formato: 31/12/2025 o 2025-12-31
+        </p>
       </details>
     </div>
   )
