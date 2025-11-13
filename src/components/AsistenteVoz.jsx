@@ -22,12 +22,16 @@ function AsistenteVoz({ onAgregar, onVender, onEliminar }) {
 
   // Función para parsear fechas de caducidad
   const parsearFecha = (texto) => {
-    // 🔥 Reemplazar "slash" por "/" antes de procesar
-    let textoLimpio = texto.replace(/slash/gi, '/')
+    console.log('🔍 Parseando fecha del texto:', texto)
+    
+    // 🔥 Reemplazar "slash" por "/" Y eliminar espacios extras alrededor de las barras
+    let textoLimpio = texto.replace(/slash/gi, '/').replace(/\s*\/\s*/g, '/')
+    console.log('🔍 Texto después de reemplazar slash:', textoLimpio)
     
     // Formato ISO estándar: 2025-12-31
     const fechaISO = textoLimpio.match(/(\d{4})-(\d{2})-(\d{2})/)
     if (fechaISO) {
+      console.log('✅ Fecha ISO encontrada:', fechaISO[0])
       return fechaISO[0]
     }
     
@@ -35,16 +39,21 @@ function AsistenteVoz({ onAgregar, onVender, onEliminar }) {
     const fechaDMA = textoLimpio.match(/(\d{1,2})[\/\s-](\d{1,2})[\/\s-](\d{4})/)
     if (fechaDMA) {
       const [, dia, mes, año] = fechaDMA
-      return `${año}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`
+      const fechaFormateada = `${año}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`
+      console.log('✅ Fecha DMA encontrada:', fechaFormateada)
+      return fechaFormateada
     }
     
     // Formato mes/año: 12/2025 (asume día 1)
     const fechaMA = textoLimpio.match(/(\d{1,2})[\/\s-](\d{4})/)
     if (fechaMA) {
       const [, mes, año] = fechaMA
-      return `${año}-${mes.padStart(2, '0')}-01`
+      const fechaFormateada = `${año}-${mes.padStart(2, '0')}-01`
+      console.log('✅ Fecha MA encontrada:', fechaFormateada)
+      return fechaFormateada
     }
     
+    console.log('❌ No se pudo parsear la fecha')
     return null
   }
 
@@ -224,6 +233,7 @@ function AsistenteVoz({ onAgregar, onVender, onEliminar }) {
         <ul style={{ marginTop: '8px' }}>
           <li><strong>Agregar:</strong> "agregar producto [nombre] fecha [dd/mm/yyyy]"
             <br/><em>Ejemplo: agregar producto coca cola fecha 31/12/2025</em>
+            <br/><em>También: agregar producto doritos fecha 12 slash 12 slash 2026</em>
           </li>
           <li><strong>Vender:</strong> "vender producto [nombre]"
             <br/><em>Ejemplo: vender producto coca cola</em>
@@ -233,7 +243,7 @@ function AsistenteVoz({ onAgregar, onVender, onEliminar }) {
           </li>
         </ul>
         <p style={{ fontSize: '12px', marginTop: '8px', fontStyle: 'italic' }}>
-          💡 La fecha puede decirse en formato: 31/12/2025 o 2025-12-31
+          💡 La fecha puede decirse como: "31/12/2025", "31 12 2025", "12 slash 12 slash 2026"
         </p>
         <p style={{ fontSize: '12px', marginTop: '4px', fontStyle: 'italic', color: '#e67e22' }}>
           ⚠️ El producto debe existir en el catálogo y tener slots disponibles
