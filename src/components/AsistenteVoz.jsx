@@ -50,26 +50,25 @@ function AsistenteVoz({ onAgregar, onVender, onEliminar }) {
     console.log('📥 Procesando comando:', texto)
 
     if (texto.includes('agregar')) {
-      // Patrón más flexible: acepta "producto" o "productos"
-      const matchProducto = texto.match(/productos?\s+([\wáéíóúñ]+(?:\s+[\wáéíóúñ]+)*?)(?=\s+(?:fecha|slot))/i)
+      // Patrón mejorado: captura el nombre del producto hasta encontrar la palabra "fecha"
+      const matchProducto = texto.match(/agregar\s+(?:producto\s+)?([\wáéíóúñ\s]+?)(?=\s+fecha)/i)
       const producto = matchProducto?.[1]?.trim()
       
       const fecha = parsearFecha(texto)
-      const slot = texto.match(/slot\s+(\d+)/i)?.[1]
       
-      console.log('🧩 Datos detectados:', { producto, fecha, slot })
+      console.log('🧩 Datos detectados:', { producto, fecha })
 
-      if (producto && fecha && slot) {
-        const exito = await onAgregar(producto, fecha, slot)
+      if (producto && fecha) {
+        const exito = await onAgregar(producto, fecha)
         console.log('📦 Resultado agregar:', exito)
         if (exito) {
-          hablar(`Producto ${producto} agregado con éxito en el slot ${slot}`)
+          hablar(`Producto ${producto} agregado con éxito`)
         } else {
-          hablar(`No se pudo agregar el producto ${producto}. Verifica que exista en el catálogo`)
+          hablar(`No se pudo agregar el producto ${producto}. Puede que no exista en el catálogo o se hayan agotado los slots disponibles`)
         }
       } else {
-        const faltante = !producto ? 'el nombre del producto' : !fecha ? 'la fecha' : 'el número de slot'
-        hablar(`Falta ${faltante}. Intenta de nuevo diciendo: agregar producto, nombre, fecha y slot número`)
+        const faltante = !producto ? 'el nombre del producto' : 'la fecha de caducidad'
+        hablar(`Falta ${faltante}. Intenta de nuevo diciendo: agregar producto, nombre del producto y fecha de caducidad`)
       }
     }
 
@@ -217,8 +216,8 @@ function AsistenteVoz({ onAgregar, onVender, onEliminar }) {
       <details style={{ marginTop: '10px', fontSize: '14px', color: '#666' }}>
         <summary style={{ cursor: 'pointer', fontWeight: 'bold' }}>ℹ️ Comandos disponibles</summary>
         <ul style={{ marginTop: '8px' }}>
-          <li><strong>Agregar:</strong> "agregar producto [nombre] fecha [dd/mm/yyyy] slot [número]"
-            <br/><em>Ejemplo: agregar producto coca cola fecha 31/12/2025 slot 5</em>
+          <li><strong>Agregar:</strong> "agregar producto [nombre] fecha [dd/mm/yyyy]"
+            <br/><em>Ejemplo: agregar producto coca cola fecha 31/12/2025</em>
           </li>
           <li><strong>Vender:</strong> "vender producto [nombre]"
             <br/><em>Ejemplo: vender producto coca cola</em>
@@ -229,6 +228,9 @@ function AsistenteVoz({ onAgregar, onVender, onEliminar }) {
         </ul>
         <p style={{ fontSize: '12px', marginTop: '8px', fontStyle: 'italic' }}>
           💡 La fecha puede decirse en formato: 31/12/2025 o 2025-12-31
+        </p>
+        <p style={{ fontSize: '12px', marginTop: '4px', fontStyle: 'italic', color: '#e67e22' }}>
+          ⚠️ El producto debe existir en el catálogo y tener slots disponibles
         </p>
       </details>
     </div>
