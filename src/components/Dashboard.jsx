@@ -58,12 +58,19 @@ function Dashboard({ user }) {
       const clave = `${nombre}-${marca}`
       
       if (!agrupados[clave]) {
+        // 🔥 Buscar los slots máximos del catálogo
+        const plantilla = catalogoProductos.find(
+          cat => cat.tipoProducto === nombre && cat.marcaFabricante === marca
+        )
+        const slotsMaximos = plantilla?.slotsMaximos ? parseInt(plantilla.slotsMaximos) : 100
+        
         agrupados[clave] = {
           nombre,
           marca,
           precio,
           stock: 0,
-          vendidos: 0
+          vendidos: 0,
+          slotsMaximos // 🔥 NUEVO: guardamos los slots máximos
         }
       }
       agrupados[clave].stock += 1
@@ -76,12 +83,19 @@ function Dashboard({ user }) {
       const clave = `${nombre}-${marca}`
       
       if (!agrupados[clave]) {
+        // 🔥 Buscar los slots máximos del catálogo
+        const plantilla = catalogoProductos.find(
+          cat => cat.tipoProducto === nombre && cat.marcaFabricante === marca
+        )
+        const slotsMaximos = plantilla?.slotsMaximos ? parseInt(plantilla.slotsMaximos) : 100
+        
         agrupados[clave] = {
           nombre,
           marca,
           precio,
           stock: 0,
-          vendidos: 0
+          vendidos: 0,
+          slotsMaximos // 🔥 NUEVO: guardamos los slots máximos
         }
       }
       agrupados[clave].vendidos += 1
@@ -96,22 +110,21 @@ function Dashboard({ user }) {
     setResumen(resultado)
   }
 
-  // 🚦 Función para obtener el color del semáforo
-  const obtenerColorSemaforo = (stock, stockTotal) => {
-    if (stock <= 10) return '#e74c3c' // Rojo - Crítico
-    if (stock <= stockTotal / 2) return '#f39c12' // Amarillo - Medio
-    return '#27ae60' // Verde - Completo
+  // 🚦 Función para obtener el color del semáforo basado en slots máximos
+  const obtenerColorSemaforo = (stock, slotsMaximos) => {
+    const porcentaje = (stock / slotsMaximos) * 100
+    
+    if (porcentaje <= 20) return '#e74c3c' // Rojo - Crítico (≤20%)
+    if (porcentaje <= 50) return '#f39c12' // Amarillo - Medio (21-50%)
+    return '#27ae60' // Verde - Completo (>50%)
   }
 
-  // Calcular stock total (stock actual + vendidos)
-  const obtenerStockTotal = (item) => {
-    return item.stock + item.vendidos
-  }
-
-  // Obtener el estado en texto
-  const obtenerEstadoTexto = (stock, stockTotal) => {
-    if (stock <= 10) return 'CRÍTICO'
-    if (stock <= stockTotal / 2) return 'BAJO'
+  // Obtener el estado en texto basado en slots máximos
+  const obtenerEstadoTexto = (stock, slotsMaximos) => {
+    const porcentaje = (stock / slotsMaximos) * 100
+    
+    if (porcentaje <= 20) return 'CRÍTICO'
+    if (porcentaje <= 50) return 'BAJO'
     return 'NORMAL'
   }
   
@@ -124,8 +137,10 @@ function Dashboard({ user }) {
   }, [user])
   
   useEffect(() => {
-    GenerarResumen()
-  }, [productosStock, historialVentas])
+    if (catalogoProductos.length > 0) {
+      GenerarResumen()
+    }
+  }, [productosStock, historialVentas, catalogoProductos])
   
   return (
     <div className="dashboard-container">
@@ -139,6 +154,8 @@ function Dashboard({ user }) {
             <th className="dashboard-th dashboard-th-left">Marca</th>
             <th className="dashboard-th dashboard-th-center">Vendidos</th>
             <th className="dashboard-th dashboard-th-center">Stock</th>
+            <th className="dashboard-th dashboard-th-center">Slots Máx.</th>
+            <th className="dashboard-th dashboard-th-center">% Ocupación</th>
             <th className="dashboard-th dashboard-th-right">Dinero en stock ($)</th>
             <th className="dashboard-th dashboard-th-right">Dinero ganado ($)</th>
           </tr>
@@ -146,9 +163,9 @@ function Dashboard({ user }) {
         <tbody>
           {resumen.length > 0 ? (
             resumen.map((item, index) => {
-              const stockTotal = obtenerStockTotal(item)
-              const colorSemaforo = obtenerColorSemaforo(item.stock, stockTotal)
-              const estadoTexto = obtenerEstadoTexto(item.stock, stockTotal)
+              const colorSemaforo = obtenerColorSemaforo(item.stock, item.slotsMaximos)
+              const estadoTexto = obtenerEstadoTexto(item.stock, item.slotsMaximos)
+              const porcentajeOcupacion = ((item.stock / item.slotsMaximos) * 100).toFixed(1)
               
               return (
                 <tr key={index} className={`dashboard-table-row ${index % 2 === 0 ? 'dashboard-row-even' : 'dashboard-row-odd'}`}>
@@ -199,6 +216,42 @@ function Dashboard({ user }) {
                   }}>
                     {item.stock}
                   </td>
+                  <td className="dashboard-td dashboard-td-center" style={{
+                    fontWeight: '600',
+                    color: '#7f8c8d'
+                  }}>
+                    {item.slotsMaximos}
+                  </td>
+                  <td className="dashboard-td dashboard-td-center">
+                    <div style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '4px'
+                    }}>
+                      <span style={{
+                        fontWeight: '600',
+                        color: colorSemaforo
+                      }}>
+                        {porcentajeOcupacion}%
+                      </span>
+                      {/* Barra de progreso */}
+                      <div style={{
+                        width: '80px',
+                        height: '6px',
+                        backgroundColor: '#ecf0f1',
+                        borderRadius: '3px',
+                        overflow: 'hidden'
+                      }}>
+                        <div style={{
+                          width: `${porcentajeOcupacion}%`,
+                          height: '100%',
+                          backgroundColor: colorSemaforo,
+                          transition: 'width 0.3s'
+                        }}></div>
+                      </div>
+                    </div>
+                  </td>
                   <td className="dashboard-td dashboard-td-right">${item.dineroStock}</td>
                   <td className="dashboard-td dashboard-td-right">${item.dineroGanado}</td>
                 </tr>
@@ -206,7 +259,7 @@ function Dashboard({ user }) {
             })
           ) : (
             <tr>
-              <td colSpan="7" className="dashboard-loading">
+              <td colSpan="9" className="dashboard-loading">
                 Cargando datos...
               </td>
             </tr>
@@ -214,7 +267,7 @@ function Dashboard({ user }) {
         </tbody>
       </table>
 
-      {/* 📋 LEYENDA DEL SEMÁFORO */}
+      {/* 📋 LEYENDA DEL SEMÁFORO ACTUALIZADA */}
       <div style={{
         marginTop: '20px',
         padding: '15px',
@@ -234,7 +287,7 @@ function Dashboard({ user }) {
             boxShadow: '0 0 8px #27ae60'
           }}></div>
           <span style={{ fontSize: '14px', color: '#2c3e50' }}>
-            <strong>Verde:</strong> Stock completo (más del 50%)
+            <strong>Verde:</strong> Stock normal (más del 50% de slots)
           </span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -246,7 +299,7 @@ function Dashboard({ user }) {
             boxShadow: '0 0 8px #f39c12'
           }}></div>
           <span style={{ fontSize: '14px', color: '#2c3e50' }}>
-            <strong>Amarillo:</strong> Stock medio (11-50%)
+            <strong>Amarillo:</strong> Stock bajo (21-50% de slots)
           </span>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -258,9 +311,22 @@ function Dashboard({ user }) {
             boxShadow: '0 0 8px #e74c3c'
           }}></div>
           <span style={{ fontSize: '14px', color: '#2c3e50' }}>
-            <strong>Rojo:</strong> Stock crítico (≤10 unidades)
+            <strong>Rojo:</strong> Stock crítico (≤20% de slots)
           </span>
         </div>
+      </div>
+
+      {/* 💡 NOTA SOBRE DEFAULT */}
+      <div style={{
+        marginTop: '15px',
+        padding: '12px',
+        backgroundColor: '#fff9e6',
+        borderLeft: '4px solid #f39c12',
+        borderRadius: '4px'
+      }}>
+        <span style={{ fontSize: '13px', color: '#7f8c8d' }}>
+          💡 <strong>Nota:</strong> Los productos sin slots definidos usan 100 como valor predeterminado.
+        </span>
       </div>
     </div>
   )

@@ -193,7 +193,6 @@ function HistorialVentas({ user }) {
                   <th>Fecha y Hora</th>
                   <th>Producto</th>
                   <th>Marca</th>
-                  <th>Slot</th>
                   <th className="texto-derecha">Precio</th>
                 </tr>
               </thead>
@@ -204,13 +203,12 @@ function HistorialVentas({ user }) {
                       <td className="fecha-cell">{FormatearFecha(venta.fechaVenta)}</td>
                       <td>{venta.tipoProducto}</td>
                       <td>{venta.marcaFabricante}</td>
-                      <td className="texto-centro">{venta.slot}</td>
                       <td className="texto-derecha precio-cell">${parseFloat(venta.precio).toFixed(2)}</td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="tabla-vacia-historial">
+                    <td colSpan="4" className="tabla-vacia-historial">
                       No hay ventas registradas en este período
                     </td>
                   </tr>

@@ -14,13 +14,13 @@ function Tabla({ user }) {
   const [nuevoCatalogoProducto, setNuevoCatalogoProducto] = useState({
     tipoProducto: '',
     marcaFabricante: '',
-    precio: ''
+    precio: '',
+    slotsMaximos: '' // 🔥 NUEVO: cantidad máxima de productos de este tipo
   })
   const [productoAgregar, setProductoAgregar] = useState({
     plantillaId: '',
     fechaCaducidad: '',
-    slot: '',
-    cantidad: 1 // 👈 Nueva propiedad para múltiples productos
+    cantidad: 1
   })
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -77,7 +77,7 @@ function Tabla({ user }) {
 
   const registrarCatalogoProducto = async (e) => {
     e.preventDefault()
-    if (!nuevoCatalogoProducto.tipoProducto.trim() || !nuevoCatalogoProducto.marcaFabricante.trim() || !nuevoCatalogoProducto.precio) {
+    if (!nuevoCatalogoProducto.tipoProducto.trim() || !nuevoCatalogoProducto.marcaFabricante.trim() || !nuevoCatalogoProducto.precio || !nuevoCatalogoProducto.slotsMaximos) {
       alert('Completa todos los campos del catálogo')
       return
     }
@@ -88,7 +88,7 @@ function Tabla({ user }) {
         ...nuevoCatalogoProducto,
         fechaCreacion: new Date().toISOString()
       })
-      setNuevoCatalogoProducto({ tipoProducto: '', marcaFabricante: '', precio: '' })
+      setNuevoCatalogoProducto({ tipoProducto: '', marcaFabricante: '', precio: '', slotsMaximos: '' })
       setMostrarFormCatalogo(false)
       alert('Plantilla de producto creada')
     } catch (err) {
@@ -96,13 +96,13 @@ function Tabla({ user }) {
     }
   }
 
-  // 🔥 FUNCIÓN MODIFICADA: Ahora agrega múltiples productos
+  // 🔥 FUNCIÓN MODIFICADA: Ahora agrega múltiples productos y valida slots máximos
   const agregarProductoATabla = async (e) => {
     e.preventDefault()
-    const { plantillaId, fechaCaducidad, slot, cantidad } = productoAgregar
+    const { plantillaId, fechaCaducidad, cantidad } = productoAgregar
     
-    if (!plantillaId || !fechaCaducidad || !slot || !cantidad || cantidad < 1) {
-      alert('Selecciona una plantilla, completa fecha de caducidad, número de slot y cantidad válida')
+    if (!plantillaId || !fechaCaducidad || !cantidad || cantidad < 1) {
+      alert('Selecciona una plantilla, completa fecha de caducidad y cantidad válida')
       return
     }
 
@@ -113,12 +113,22 @@ function Tabla({ user }) {
         return
       }
 
+      // 🔥 VALIDAR SLOTS DISPONIBLES
+      const productosDelTipo = productos.filter(p => p.tipoProducto === plantilla.tipoProducto)
+      const cantidadActual = productosDelTipo.length
+      const cantidadSolicitada = parseInt(cantidad)
+      const slotsMaximos = parseInt(plantilla.slotsMaximos)
+
+      if (cantidadActual + cantidadSolicitada > slotsMaximos) {
+        alert(`❌ No se puede agregar. Límite: ${slotsMaximos} productos.\nActual: ${cantidadActual}\nIntentando agregar: ${cantidadSolicitada}\nDisponibles: ${slotsMaximos - cantidadActual}`)
+        return
+      }
+
       const productosRef = ref(database, `usuarios/${user.uid}/productos`)
-      const cantidadNum = parseInt(cantidad)
 
       // 🔥 Agregar múltiples productos idénticos
       const promesas = []
-      for (let i = 0; i < cantidadNum; i++) {
+      for (let i = 0; i < cantidadSolicitada; i++) {
         const nuevoProductoRef = push(productosRef)
         promesas.push(
           set(nuevoProductoRef, {
@@ -126,7 +136,6 @@ function Tabla({ user }) {
             marcaFabricante: plantilla.marcaFabricante,
             precio: plantilla.precio,
             fechaCaducidad,
-            slot,
             fechaRegistro: new Date().toISOString(),
             estado: 'disponible'
           })
@@ -135,9 +144,9 @@ function Tabla({ user }) {
 
       await Promise.all(promesas)
 
-      setProductoAgregar({ plantillaId: '', fechaCaducidad: '', slot: '', cantidad: 1 })
+      setProductoAgregar({ plantillaId: '', fechaCaducidad: '', cantidad: 1 })
       setMostrarFormAgregar(false)
-      alert(`${cantidadNum} producto(s) agregado(s) a la tabla`)
+      alert(`✅ ${cantidadSolicitada} producto(s) agregado(s).\nTotal ahora: ${cantidadActual + cantidadSolicitada}/${slotsMaximos}`)
     } catch (err) {
       alert('Error al agregar productos: ' + err.message)
     }
@@ -247,6 +256,14 @@ function Tabla({ user }) {
               onChange={(e) => setNuevoCatalogoProducto({ ...nuevoCatalogoProducto, precio: e.target.value })}
               required
             />
+            <input
+              type="number"
+              min="1"
+              placeholder="Slots máximos (cantidad máxima de productos)"
+              value={nuevoCatalogoProducto.slotsMaximos}
+              onChange={(e) => setNuevoCatalogoProducto({ ...nuevoCatalogoProducto, slotsMaximos: e.target.value })}
+              required
+            />
             <button type="submit" className="btn-guardar">Guardar plantilla</button>
           </form>
         </div>
@@ -262,11 +279,15 @@ function Tabla({ user }) {
               required
             >
               <option value="">Seleccionar plantilla</option>
-              {catalogoProductos.map(p => (
-                <option key={p.id} value={p.id}>
-                  {p.tipoProducto} — {p.marcaFabricante} — ${parseFloat(p.precio).toFixed(2)}
-                </option>
-              ))}
+              {catalogoProductos.map(p => {
+                const productosDelTipo = productos.filter(prod => prod.tipoProducto === p.tipoProducto)
+                const slotsDisponibles = parseInt(p.slotsMaximos) - productosDelTipo.length
+                return (
+                  <option key={p.id} value={p.id} disabled={slotsDisponibles <= 0}>
+                    {p.tipoProducto} — {p.marcaFabricante} — ${parseFloat(p.precio).toFixed(2)} — {slotsDisponibles}/{p.slotsMaximos} disponibles
+                  </option>
+                )
+              })}
             </select>
             <input
               type="date"
@@ -274,15 +295,8 @@ function Tabla({ user }) {
               onChange={(e) => setProductoAgregar({ ...productoAgregar, fechaCaducidad: e.target.value })}
               required
             />
-            <input
-              type="text"
-              placeholder="Número de slot"
-              value={productoAgregar.slot}
-              onChange={(e) => setProductoAgregar({ ...productoAgregar, slot: e.target.value })}
-              required
-            />
             
-            {/* 🔥 NUEVO CAMPO DE CANTIDAD CON ESTILOS ACORDE AL DISEÑO */}
+            {/* 🔥 CAMPO DE CANTIDAD CON VALIDACIÓN DE SLOTS */}
             <div style={{ 
               backgroundColor: 'rgba(247, 184, 1, 0.15)', 
               padding: '1.5rem', 
@@ -338,11 +352,15 @@ function Tabla({ user }) {
       )}
 
       <AsistenteVoz
-        onAgregar={async (nombre, fecha, slot) => {
+        onAgregar={async (nombre, fecha) => {
           const plantilla = catalogoProductos.find(
             p => p.tipoProducto.toLowerCase() === nombre.toLowerCase()
           )
           if (!plantilla) return false
+
+          // Validar slots disponibles
+          const productosDelTipo = productos.filter(p => p.tipoProducto === plantilla.tipoProducto)
+          if (productosDelTipo.length >= parseInt(plantilla.slotsMaximos)) return false
 
           try {
             const productosRef = ref(database, `usuarios/${user.uid}/productos`)
@@ -352,7 +370,6 @@ function Tabla({ user }) {
               marcaFabricante: plantilla.marcaFabricante,
               precio: plantilla.precio,
               fechaCaducidad: fecha,
-              slot,
               fechaRegistro: new Date().toISOString(),
               estado: 'disponible'
             })
@@ -392,7 +409,6 @@ function Tabla({ user }) {
                 <th>Marca</th>
                 <th>Precio</th>
                 <th>Fecha Caducidad</th>
-                <th>Slot</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -403,7 +419,6 @@ function Tabla({ user }) {
                   <td>{producto.marcaFabricante}</td>
                   <td>${parseFloat(producto.precio).toFixed(2)}</td>
                   <td>{producto.fechaCaducidad ? new Date(producto.fechaCaducidad).toLocaleDateString('es-ES') : '-'}</td>
-                  <td>{producto.slot || '-'}</td>
                   <td>
                     <button className="btn-vender" onClick={() => venderProducto(producto)}>
                       Vender
