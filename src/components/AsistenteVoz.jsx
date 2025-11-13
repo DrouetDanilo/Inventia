@@ -22,21 +22,24 @@ function AsistenteVoz({ onAgregar, onVender, onEliminar }) {
 
   // Función para parsear fechas de caducidad
   const parsearFecha = (texto) => {
+    // 🔥 Reemplazar "slash" por "/" antes de procesar
+    let textoLimpio = texto.replace(/slash/gi, '/')
+    
     // Formato ISO estándar: 2025-12-31
-    const fechaISO = texto.match(/(\d{4})-(\d{2})-(\d{2})/)
+    const fechaISO = textoLimpio.match(/(\d{4})-(\d{2})-(\d{2})/)
     if (fechaISO) {
       return fechaISO[0]
     }
     
     // Formato día/mes/año: 31/12/2025 o 31 12 2025
-    const fechaDMA = texto.match(/(\d{1,2})[\/\s-](\d{1,2})[\/\s-](\d{4})/)
+    const fechaDMA = textoLimpio.match(/(\d{1,2})[\/\s-](\d{1,2})[\/\s-](\d{4})/)
     if (fechaDMA) {
       const [, dia, mes, año] = fechaDMA
       return `${año}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`
     }
     
     // Formato mes/año: 12/2025 (asume día 1)
-    const fechaMA = texto.match(/(\d{1,2})[\/\s-](\d{4})/)
+    const fechaMA = textoLimpio.match(/(\d{1,2})[\/\s-](\d{4})/)
     if (fechaMA) {
       const [, mes, año] = fechaMA
       return `${año}-${mes.padStart(2, '0')}-01`
@@ -50,13 +53,16 @@ function AsistenteVoz({ onAgregar, onVender, onEliminar }) {
     console.log('📥 Procesando comando:', texto)
 
     if (texto.includes('agregar')) {
+      // 🔥 Limpiar el texto: remover puntos y comas extras
+      const textoLimpio = texto.replace(/[.,;]+/g, ' ').trim()
+      
       // Patrón mejorado: captura el nombre del producto hasta encontrar la palabra "fecha"
-      const matchProducto = texto.match(/agregar\s+(?:producto\s+)?([\wáéíóúñ\s]+?)(?=\s+fecha)/i)
+      const matchProducto = textoLimpio.match(/agregar\s+(?:producto\s+)?([\wáéíóúñ\s]+?)(?=\s+fecha)/i)
       const producto = matchProducto?.[1]?.trim()
       
-      const fecha = parsearFecha(texto)
+      const fecha = parsearFecha(textoLimpio)
       
-      console.log('🧩 Datos detectados:', { producto, fecha })
+      console.log('🧩 Datos detectados:', { producto, fecha, textoOriginal: texto, textoLimpio })
 
       if (producto && fecha) {
         const exito = await onAgregar(producto, fecha)
