@@ -42,7 +42,6 @@ function Dashboard({ user }) {
       const data = snapshot.val()
       if (data) {
         const ventasLista = Object.keys(data).map(key => ({ id: key, ...data[key] }))
-        // más recientes primero
         ventasLista.sort((a, b) => new Date(b.fechaVenta) - new Date(a.fechaVenta))
         setHistorialVentas(ventasLista)
       } else {
@@ -51,7 +50,7 @@ function Dashboard({ user }) {
     })
   }
 
-  // ---------- RESUMEN POR PRODUCTO (TU TABLA ACTUAL) ----------
+  // ---------- RESUMEN ----------
   const GenerarResumen = () => {
     const agrupados = {}
 
@@ -67,14 +66,7 @@ function Dashboard({ user }) {
         )
         const slotsMaximos = plantilla?.slotsMaximos ? parseInt(plantilla.slotsMaximos) : 100
 
-        agrupados[clave] = {
-          nombre,
-          marca,
-          precio,
-          stock: 0,
-          vendidos: 0,
-          slotsMaximos
-        }
+        agrupados[clave] = { nombre, marca, precio, stock: 0, vendidos: 0, slotsMaximos }
       }
       agrupados[clave].stock += 1
     })
@@ -91,14 +83,7 @@ function Dashboard({ user }) {
         )
         const slotsMaximos = plantilla?.slotsMaximos ? parseInt(plantilla.slotsMaximos) : 100
 
-        agrupados[clave] = {
-          nombre,
-          marca,
-          precio,
-          stock: 0,
-          vendidos: 0,
-          slotsMaximos
-        }
+        agrupados[clave] = { nombre, marca, precio, stock: 0, vendidos: 0, slotsMaximos }
       }
       agrupados[clave].vendidos += 1
     })
@@ -112,18 +97,18 @@ function Dashboard({ user }) {
     setResumen(resultado)
   }
 
-  // ---------- UTILIDADES DE COLOR ----------
+  // ---------- COLOR ----------
   const obtenerColorSemaforo = (stock, slotsMaximos) => {
-    const porcentaje = (stock / slotsMaximos) * 100
-    if (porcentaje <= 20) return '#e74c3c'
-    if (porcentaje <= 50) return '#f39c12'
+    const p = (stock / slotsMaximos) * 100
+    if (p <= 20) return '#e74c3c'
+    if (p <= 50) return '#f39c12'
     return '#27ae60'
   }
 
   const obtenerEstadoTexto = (stock, slotsMaximos) => {
-    const porcentaje = (stock / slotsMaximos) * 100
-    if (porcentaje <= 20) return 'CRÍTICO'
-    if (porcentaje <= 50) return 'BAJO'
+    const p = (stock / slotsMaximos) * 100
+    if (p <= 20) return 'CRÍTICO'
+    if (p <= 50) return 'BAJO'
     return 'NORMAL'
   }
 
@@ -142,24 +127,20 @@ function Dashboard({ user }) {
     }
   }, [productosStock, historialVentas, catalogoProductos])
 
-  // ---------- MÉTRICAS PARA LAS TARJETAS ----------
+  // ---------- MÉTRICAS ----------
   const totalCategorias = new Set(
     catalogoProductos.map(c => c.tipoProducto?.toLowerCase())
   ).size
-
   const totalProductosStock = productosStock.length
-
   const totalVentasRealizadas = historialVentas.length
 
-  const valorStockTotal = resumen.reduce(
-    (sum, p) => sum + (parseFloat(p.dineroStock) || 0),
-    0
-  ).toFixed(2)
+  const valorStockTotal = resumen
+    .reduce((sum, p) => sum + (parseFloat(p.dineroStock) || 0), 0)
+    .toFixed(2)
 
-  const valorVentasTotal = historialVentas.reduce(
-    (sum, v) => sum + (parseFloat(v.precio) || 0),
-    0
-  ).toFixed(2)
+  const valorVentasTotal = historialVentas
+    .reduce((sum, v) => sum + (parseFloat(v.precio) || 0), 0)
+    .toFixed(2)
 
   const productosMasVendidos = [...resumen]
     .sort((a, b) => b.vendidos - a.vendidos)
@@ -180,6 +161,21 @@ function Dashboard({ user }) {
   }
 
   const avatar = (user?.displayName || user?.email || '?').charAt(0).toUpperCase()
+
+  // ---------- PRODUCTOS A REPONER ----------
+  const productosAReponer = [...resumen]
+    .map(p => {
+      const porcentaje = p.slotsMaximos ? (p.stock / p.slotsMaximos) * 100 : 0
+      return { ...p, porcentajeOcupacion: porcentaje }
+    })
+    .filter(p => p.porcentajeOcupacion <= 50) // solo críticos y bajos
+    .sort((a, b) => {
+      const nivel = porc => (porc <= 20 ? 0 : 1)
+      const na = nivel(a.porcentajeOcupacion)
+      const nb = nivel(b.porcentajeOcupacion)
+      if (na !== nb) return na - nb
+      return a.porcentajeOcupacion - b.porcentajeOcupacion
+    })
 
   return (
     <div className="dashboard-page">
@@ -205,7 +201,7 @@ function Dashboard({ user }) {
         </div>
       </div>
 
-      {/* TARJETAS RESUMEN */}
+      {/* TARJETAS */}
       <div className="dashboard-cards-grid">
         <div className="dashboard-card card-green">
           <div className="card-icon">📂</div>
@@ -236,8 +232,9 @@ function Dashboard({ user }) {
         </div>
       </div>
 
-      {/* BLOQUE CENTRAL: MÁS VENDIDOS + ÚLTIMAS VENTAS */}
+      {/* BLOQUE CENTRAL */}
       <div className="dashboard-middle-grid">
+        {/* Más vendidos */}
         <section className="dashboard-box">
           <h2 className="dashboard-box-title">Productos más vendidos</h2>
           {productosMasVendidos.length === 0 ? (
@@ -266,6 +263,7 @@ function Dashboard({ user }) {
           )}
         </section>
 
+        {/* Últimas ventas */}
         <section className="dashboard-box">
           <h2 className="dashboard-box-title">Últimas ventas</h2>
           {ultimasVentas.length === 0 ? (
@@ -295,147 +293,58 @@ function Dashboard({ user }) {
             </table>
           )}
         </section>
-      </div>
 
-      {/* DETALLE POR PRODUCTO (TU TABLA CON SEMÁFORO) */}
-      <div className="dashboard-detalle">
-        <h2 className="dashboard-title">Detalle por producto</h2>
+        {/* Productos a reponer */}
+        <section className="dashboard-box">
+          <h2 className="dashboard-box-title">Productos a reponer</h2>
 
-        <table className="dashboard-table">
-          <thead>
-            <tr className="dashboard-table-header">
-              <th className="dashboard-th dashboard-th-center">Estado</th>
-              <th className="dashboard-th dashboard-th-left">Nombre</th>
-              <th className="dashboard-th dashboard-th-left">Marca</th>
-              <th className="dashboard-th dashboard-th-center">Vendidos</th>
-              <th className="dashboard-th dashboard-th-center">Stock</th>
-              <th className="dashboard-th dashboard-th-center">Slots Máx.</th>
-              <th className="dashboard-th dashboard-th-center">% Ocupación</th>
-              <th className="dashboard-th dashboard-th-right">Dinero en stock ($)</th>
-              <th className="dashboard-th dashboard-th-right">Dinero ganado ($)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {resumen.length > 0 ? (
-              resumen.map((item, index) => {
-                const colorSemaforo = obtenerColorSemaforo(item.stock, item.slotsMaximos)
-                const estadoTexto = obtenerEstadoTexto(item.stock, item.slotsMaximos)
-                const porcentajeOcupacion = ((item.stock / item.slotsMaximos) * 100).toFixed(1)
+          {productosAReponer.length === 0 ? (
+            <p className="dashboard-empty">
+              No hay productos con stock bajo o crítico.
+            </p>
+          ) : (
+            <table className="dashboard-mini-table">
+              <thead>
+                <tr>
+                  <th>Estado</th>
+                  <th>Producto</th>
+                  <th>Marca</th>
+                  <th>% Ocupación</th>
+                </tr>
+              </thead>
+              <tbody>
+                {productosAReponer.map((p, i) => {
+                  const color = obtenerColorSemaforo(p.stock, p.slotsMaximos)
+                  const estado = obtenerEstadoTexto(p.stock, p.slotsMaximos)
 
-                return (
-                  <tr
-                    key={index}
-                    className={`dashboard-table-row ${index % 2 === 0 ? 'dashboard-row-even' : 'dashboard-row-odd'}`}
-                  >
-                    <td className="dashboard-td dashboard-td-center">
-                      <div className="semaforo-container">
-                        <div
-                          className="semaforo-luz"
-                          style={{
-                            backgroundColor: colorSemaforo,
-                            boxShadow: `0 0 10px ${colorSemaforo}`
-                          }}
-                        >
-                          <div className="semaforo-brillo"></div>
-                        </div>
-                        <span
-                          className="semaforo-texto"
-                          style={{ color: colorSemaforo }}
-                        >
-                          {estadoTexto}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="dashboard-td">{item.nombre}</td>
-                    <td className="dashboard-td">{item.marca}</td>
-                    <td className="dashboard-td dashboard-td-center">{item.vendidos}</td>
-                    <td
-                      className="dashboard-td dashboard-td-center stock-destacado"
-                      style={{ color: colorSemaforo }}
-                    >
-                      {item.stock}
-                    </td>
-                    <td className="dashboard-td dashboard-td-center slots-maximos">
-                      {item.slotsMaximos}
-                    </td>
-                    <td className="dashboard-td dashboard-td-center">
-                      <div className="porcentaje-container">
-                        <span
-                          className="porcentaje-texto"
-                          style={{ color: colorSemaforo }}
-                        >
-                          {porcentajeOcupacion}%
-                        </span>
-                        <div className="barra-progreso">
+                  return (
+                    <tr key={i}>
+                      <td>
+                        <div className="semaforo-container">
                           <div
-                            className="barra-progreso-fill"
+                            className="semaforo-luz"
                             style={{
-                              width: `${porcentajeOcupacion}%`,
-                              backgroundColor: colorSemaforo
+                              backgroundColor: color,
+                              boxShadow: `0 0 10px ${color}`
                             }}
-                          ></div>
+                          >
+                            <div className="semaforo-brillo"></div>
+                          </div>
+                          <span className="semaforo-texto" style={{ color }}>
+                            {estado}
+                          </span>
                         </div>
-                      </div>
-                    </td>
-                    <td className="dashboard-td dashboard-td-right">${item.dineroStock}</td>
-                    <td className="dashboard-td dashboard-td-right">${item.dineroGanado}</td>
-                  </tr>
-                )
-              })
-            ) : (
-              <tr>
-                <td colSpan="9" className="dashboard-loading">
-                  Cargando datos...
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-
-        <div className="leyenda-semaforo">
-          <div className="leyenda-item">
-            <div
-              className="leyenda-circulo"
-              style={{
-                backgroundColor: '#27ae60',
-                boxShadow: '0 0 8px #27ae60'
-              }}
-            ></div>
-            <span className="leyenda-texto">
-              <strong>Verde:</strong> Stock normal (más del 50% de slots)
-            </span>
-          </div>
-          <div className="leyenda-item">
-            <div
-              className="leyenda-circulo"
-              style={{
-                backgroundColor: '#f39c12',
-                boxShadow: '0 0 8px #f39c12'
-              }}
-            ></div>
-            <span className="leyenda-texto">
-              <strong>Amarillo:</strong> Stock bajo (21-50% de slots)
-            </span>
-          </div>
-          <div className="leyenda-item">
-            <div
-              className="leyenda-circulo"
-              style={{
-                backgroundColor: '#e74c3c',
-                boxShadow: '0 0 8px #e74c3c'
-              }}
-            ></div>
-            <span className="leyenda-texto">
-              <strong>Rojo:</strong> Stock crítico (≤20% de slots)
-            </span>
-          </div>
-        </div>
-
-        <div className="nota-info">
-          <span className="nota-info-texto">
-            💡 <strong>Nota:</strong> Los productos sin slots definidos usan 100 como valor predeterminado.
-          </span>
-        </div>
+                      </td>
+                      <td>{p.nombre}</td>
+                      <td>{p.marca}</td>
+                      <td>{p.porcentajeOcupacion.toFixed(1)}%</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          )}
+        </section>
       </div>
     </div>
   )
