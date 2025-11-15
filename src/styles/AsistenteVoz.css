@@ -1,0 +1,91 @@
+/* Contenedor principal del asistente de voz */
+.asistente-voz-container {
+  margin: 15px 0;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+/* Botón principal del asistente */
+.asistente-voz-button {
+  padding: 12px 24px;
+  border-radius: 8px;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.asistente-voz-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.asistente-voz-button.activo {
+  background: #c0392b;
+}
+
+.asistente-voz-button.inactivo {
+  background: #27ae60;
+}
+
+/* Contenedor del último comando */
+.ultimo-comando-container {
+  margin-top: 10px;
+  padding: 10px;
+  background: white;
+  border-radius: 6px;
+}
+
+.ultimo-comando-container p {
+  margin: 0;
+}
+
+.ultimo-comando-texto {
+  color: #2c3e50;
+}
+
+/* Sección de ayuda/comandos */
+.comandos-ayuda {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #666;
+}
+
+.comandos-ayuda summary {
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.comandos-ayuda ul {
+  margin-top: 8px;
+}
+
+.comandos-ayuda li {
+  margin-bottom: 8px;
+}
+
+.comandos-ayuda strong {
+  color: #2c3e50;
+}
+
+.comandos-ayuda em {
+  color: #7f8c8d;
+  font-size: 13px;
+}
+
+.comandos-nota {
+  font-size: 12px;
+  margin-top: 8px;
+  font-style: italic;
+}
+
+.comandos-advertencia {
+  font-size: 12px;
+  margin-top: 4px;
+  font-style: italic;
+  color: #e67e22;
+}

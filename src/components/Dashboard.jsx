@@ -58,7 +58,6 @@ function Dashboard({ user }) {
       const clave = `${nombre}-${marca}`
       
       if (!agrupados[clave]) {
-        // 🔥 Buscar los slots máximos del catálogo
         const plantilla = catalogoProductos.find(
           cat => cat.tipoProducto === nombre && cat.marcaFabricante === marca
         )
@@ -70,7 +69,7 @@ function Dashboard({ user }) {
           precio,
           stock: 0,
           vendidos: 0,
-          slotsMaximos // 🔥 NUEVO: guardamos los slots máximos
+          slotsMaximos
         }
       }
       agrupados[clave].stock += 1
@@ -83,7 +82,6 @@ function Dashboard({ user }) {
       const clave = `${nombre}-${marca}`
       
       if (!agrupados[clave]) {
-        // 🔥 Buscar los slots máximos del catálogo
         const plantilla = catalogoProductos.find(
           cat => cat.tipoProducto === nombre && cat.marcaFabricante === marca
         )
@@ -95,7 +93,7 @@ function Dashboard({ user }) {
           precio,
           stock: 0,
           vendidos: 0,
-          slotsMaximos // 🔥 NUEVO: guardamos los slots máximos
+          slotsMaximos
         }
       }
       agrupados[clave].vendidos += 1
@@ -110,16 +108,14 @@ function Dashboard({ user }) {
     setResumen(resultado)
   }
 
-  // 🚦 Función para obtener el color del semáforo basado en slots máximos
   const obtenerColorSemaforo = (stock, slotsMaximos) => {
     const porcentaje = (stock / slotsMaximos) * 100
     
-    if (porcentaje <= 20) return '#e74c3c' // Rojo - Crítico (≤20%)
-    if (porcentaje <= 50) return '#f39c12' // Amarillo - Medio (21-50%)
-    return '#27ae60' // Verde - Completo (>50%)
+    if (porcentaje <= 20) return '#e74c3c'
+    if (porcentaje <= 50) return '#f39c12'
+    return '#27ae60'
   }
 
-  // Obtener el estado en texto basado en slots máximos
   const obtenerEstadoTexto = (stock, slotsMaximos) => {
     const porcentaje = (stock / slotsMaximos) * 100
     
@@ -169,39 +165,22 @@ function Dashboard({ user }) {
               
               return (
                 <tr key={index} className={`dashboard-table-row ${index % 2 === 0 ? 'dashboard-row-even' : 'dashboard-row-odd'}`}>
-                  {/* 🚦 SEMÁFORO */}
+                  {/* SEMÁFORO */}
                   <td className="dashboard-td dashboard-td-center">
-                    <div style={{ 
-                      display: 'flex', 
-                      flexDirection: 'column', 
-                      alignItems: 'center',
-                      gap: '5px'
-                    }}>
-                      <div style={{
-                        width: '30px',
-                        height: '30px',
-                        borderRadius: '50%',
-                        backgroundColor: colorSemaforo,
-                        boxShadow: `0 0 10px ${colorSemaforo}`,
-                        border: '3px solid rgba(0,0,0,0.1)',
-                        position: 'relative'
-                      }}>
-                        <div style={{
-                          position: 'absolute',
-                          top: '50%',
-                          left: '50%',
-                          transform: 'translate(-50%, -50%)',
-                          width: '60%',
-                          height: '60%',
-                          borderRadius: '50%',
-                          backgroundColor: 'rgba(255,255,255,0.3)'
-                        }}></div>
+                    <div className="semaforo-container">
+                      <div 
+                        className="semaforo-luz"
+                        style={{
+                          backgroundColor: colorSemaforo,
+                          boxShadow: `0 0 10px ${colorSemaforo}`
+                        }}
+                      >
+                        <div className="semaforo-brillo"></div>
                       </div>
-                      <span style={{
-                        fontSize: '10px',
-                        fontWeight: '600',
-                        color: colorSemaforo
-                      }}>
+                      <span 
+                        className="semaforo-texto"
+                        style={{ color: colorSemaforo }}
+                      >
                         {estadoTexto}
                       </span>
                     </div>
@@ -209,46 +188,31 @@ function Dashboard({ user }) {
                   <td className="dashboard-td">{item.nombre}</td>
                   <td className="dashboard-td">{item.marca}</td>
                   <td className="dashboard-td dashboard-td-center">{item.vendidos}</td>
-                  <td className="dashboard-td dashboard-td-center" style={{
-                    fontWeight: '700',
-                    fontSize: '16px',
-                    color: colorSemaforo
-                  }}>
+                  <td 
+                    className="dashboard-td dashboard-td-center stock-destacado"
+                    style={{ color: colorSemaforo }}
+                  >
                     {item.stock}
                   </td>
-                  <td className="dashboard-td dashboard-td-center" style={{
-                    fontWeight: '600',
-                    color: '#7f8c8d'
-                  }}>
+                  <td className="dashboard-td dashboard-td-center slots-maximos">
                     {item.slotsMaximos}
                   </td>
                   <td className="dashboard-td dashboard-td-center">
-                    <div style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      gap: '4px'
-                    }}>
-                      <span style={{
-                        fontWeight: '600',
-                        color: colorSemaforo
-                      }}>
+                    <div className="porcentaje-container">
+                      <span 
+                        className="porcentaje-texto"
+                        style={{ color: colorSemaforo }}
+                      >
                         {porcentajeOcupacion}%
                       </span>
-                      {/* Barra de progreso */}
-                      <div style={{
-                        width: '80px',
-                        height: '6px',
-                        backgroundColor: '#ecf0f1',
-                        borderRadius: '3px',
-                        overflow: 'hidden'
-                      }}>
-                        <div style={{
-                          width: `${porcentajeOcupacion}%`,
-                          height: '100%',
-                          backgroundColor: colorSemaforo,
-                          transition: 'width 0.3s'
-                        }}></div>
+                      <div className="barra-progreso">
+                        <div 
+                          className="barra-progreso-fill"
+                          style={{
+                            width: `${porcentajeOcupacion}%`,
+                            backgroundColor: colorSemaforo
+                          }}
+                        ></div>
                       </div>
                     </div>
                   </td>
@@ -267,64 +231,49 @@ function Dashboard({ user }) {
         </tbody>
       </table>
 
-      {/* 📋 LEYENDA DEL SEMÁFORO ACTUALIZADA */}
-      <div style={{
-        marginTop: '20px',
-        padding: '15px',
-        backgroundColor: '#f8f9fa',
-        borderRadius: '8px',
-        display: 'flex',
-        justifyContent: 'center',
-        gap: '30px',
-        flexWrap: 'wrap'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{
-            width: '20px',
-            height: '20px',
-            borderRadius: '50%',
-            backgroundColor: '#27ae60',
-            boxShadow: '0 0 8px #27ae60'
-          }}></div>
-          <span style={{ fontSize: '14px', color: '#2c3e50' }}>
+      {/* LEYENDA DEL SEMÁFORO */}
+      <div className="leyenda-semaforo">
+        <div className="leyenda-item">
+          <div 
+            className="leyenda-circulo"
+            style={{
+              backgroundColor: '#27ae60',
+              boxShadow: '0 0 8px #27ae60'
+            }}
+          ></div>
+          <span className="leyenda-texto">
             <strong>Verde:</strong> Stock normal (más del 50% de slots)
           </span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{
-            width: '20px',
-            height: '20px',
-            borderRadius: '50%',
-            backgroundColor: '#f39c12',
-            boxShadow: '0 0 8px #f39c12'
-          }}></div>
-          <span style={{ fontSize: '14px', color: '#2c3e50' }}>
+        <div className="leyenda-item">
+          <div 
+            className="leyenda-circulo"
+            style={{
+              backgroundColor: '#f39c12',
+              boxShadow: '0 0 8px #f39c12'
+            }}
+          ></div>
+          <span className="leyenda-texto">
             <strong>Amarillo:</strong> Stock bajo (21-50% de slots)
           </span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div style={{
-            width: '20px',
-            height: '20px',
-            borderRadius: '50%',
-            backgroundColor: '#e74c3c',
-            boxShadow: '0 0 8px #e74c3c'
-          }}></div>
-          <span style={{ fontSize: '14px', color: '#2c3e50' }}>
+        <div className="leyenda-item">
+          <div 
+            className="leyenda-circulo"
+            style={{
+              backgroundColor: '#e74c3c',
+              boxShadow: '0 0 8px #e74c3c'
+            }}
+          ></div>
+          <span className="leyenda-texto">
             <strong>Rojo:</strong> Stock crítico (≤20% de slots)
           </span>
         </div>
       </div>
 
-      {/* 💡 NOTA SOBRE DEFAULT */}
-      <div style={{
-        marginTop: '15px',
-        padding: '12px',
-        backgroundColor: '#fff9e6',
-        borderLeft: '4px solid #f39c12',
-        borderRadius: '4px'
-      }}>
-        <span style={{ fontSize: '13px', color: '#7f8c8d' }}>
+      {/* NOTA SOBRE DEFAULT */}
+      <div className="nota-info">
+        <span className="nota-info-texto">
           💡 <strong>Nota:</strong> Los productos sin slots definidos usan 100 como valor predeterminado.
         </span>
       </div>

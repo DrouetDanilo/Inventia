@@ -80,3 +80,114 @@
   text-align: center;
   color: rgba(255, 255, 255, 0.6);
 }
+
+/* ============ SEMÁFORO DE ESTADO ============ */
+.semaforo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.semaforo-luz {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 3px solid rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.semaforo-brillo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60%;
+  height: 60%;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.semaforo-texto {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* ============ STOCK DESTACADO ============ */
+.stock-destacado {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.slots-maximos {
+  font-weight: 600;
+  color: #7f8c8d;
+}
+
+/* ============ PORCENTAJE DE OCUPACIÓN ============ */
+.porcentaje-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.porcentaje-texto {
+  font-weight: 600;
+}
+
+.barra-progreso {
+  width: 80px;
+  height: 6px;
+  background-color: #ecf0f1;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.barra-progreso-fill {
+  height: 100%;
+  transition: width 0.3s;
+}
+
+/* ============ LEYENDA DEL SEMÁFORO ============ */
+.leyenda-semaforo {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.leyenda-circulo {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.leyenda-texto {
+  font-size: 14px;
+  color: #2c3e50;
+}
+
+/* ============ NOTA INFORMATIVA ============ */
+.nota-info {
+  margin-top: 15px;
+  padding: 12px;
+  background-color: #fff9e6;
+  border-left: 4px solid #f39c12;
+  border-radius: 4px;
+}
+
+.nota-info-texto {
+  font-size: 13px;
+  color: #7f8c8d;
+}

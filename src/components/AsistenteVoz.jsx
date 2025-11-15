@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
+import "../styles/AsistenteVoz.css"
 
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
 
@@ -202,50 +203,43 @@ function AsistenteVoz({ onAgregar, onVender, onEliminar }) {
   }
 
   return (
-    <div style={{ margin: '15px 0', padding: '15px', background: '#f8f9fa', borderRadius: '8px' }}>
+    <div className="asistente-voz-container">
       <button
         onClick={toggleEscucha}
-        style={{
-          padding: '12px 24px',
-          borderRadius: '8px',
-          background: escuchando ? '#c0392b' : '#27ae60',
-          color: 'white',
-          border: 'none',
-          cursor: 'pointer',
-          fontSize: '16px',
-          fontWeight: 'bold',
-          boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-        }}
+        className={`asistente-voz-button ${escuchando ? 'activo' : 'inactivo'}`}
       >
         {escuchando ? '🛑 Detener Voz' : '🎙️ Activar Asistente'}
       </button>
 
       {ultimoComando && (
-        <div style={{ marginTop: '10px', padding: '10px', background: 'white', borderRadius: '6px' }}>
-          <p style={{ margin: 0 }}>
-            <b>Último comando:</b> <span style={{ color: '#2c3e50' }}>{ultimoComando}</span>
+        <div className="ultimo-comando-container">
+          <p>
+            <b>Último comando:</b> <span className="ultimo-comando-texto">{ultimoComando}</span>
           </p>
         </div>
       )}
       
-      <details style={{ marginTop: '10px', fontSize: '14px', color: '#666' }}>
-        <summary style={{ cursor: 'pointer', fontWeight: 'bold' }}>ℹ️ Comandos disponibles</summary>
-        <ul style={{ marginTop: '8px' }}>
-          <li><strong>Agregar:</strong> "agregar producto [nombre] fecha [dd/mm/yyyy]"
+      <details className="comandos-ayuda">
+        <summary>ℹ️ Comandos disponibles</summary>
+        <ul>
+          <li>
+            <strong>Agregar:</strong> "agregar producto [nombre] fecha [dd/mm/yyyy]"
             <br/><em>Ejemplo: agregar producto coca cola fecha 31/12/2025</em>
             <br/><em>También: agregar producto doritos fecha 12 slash 12 slash 2026</em>
           </li>
-          <li><strong>Vender:</strong> "vender producto [nombre]"
+          <li>
+            <strong>Vender:</strong> "vender producto [nombre]"
             <br/><em>Ejemplo: vender producto coca cola</em>
           </li>
-          <li><strong>Eliminar:</strong> "eliminar producto [nombre]"
+          <li>
+            <strong>Eliminar:</strong> "eliminar producto [nombre]"
             <br/><em>Ejemplo: eliminar producto coca cola</em>
           </li>
         </ul>
-        <p style={{ fontSize: '12px', marginTop: '8px', fontStyle: 'italic' }}>
+        <p className="comandos-nota">
           💡 La fecha puede decirse como: "31/12/2025", "31 12 2025", "12 slash 12 slash 2026"
         </p>
-        <p style={{ fontSize: '12px', marginTop: '4px', fontStyle: 'italic', color: '#e67e22' }}>
+        <p className="comandos-advertencia">
           ⚠️ El producto debe existir en el catálogo y tener slots disponibles
         </p>
       </details>

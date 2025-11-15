@@ -15,13 +15,15 @@ function Tabla({ user }) {
     tipoProducto: '',
     marcaFabricante: '',
     precio: '',
-    slotsMaximos: '' // 🔥 NUEVO: cantidad máxima de productos de este tipo
+    slotsMaximos: ''
   })
   const [productoAgregar, setProductoAgregar] = useState({
     plantillaId: '',
     fechaCaducidad: '',
     cantidad: 1
   })
+  const [cantidadVender, setCantidadVender] = useState({})
+  const [cantidadEliminar, setCantidadEliminar] = useState({})
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(true)
 
@@ -35,12 +37,28 @@ function Tabla({ user }) {
   }, [user])
 
   useEffect(() => {
-    if (productoSeleccionado === 'Todos') {
-      setProductosFiltrados(productos)
-    } else {
-      const filtrados = productos.filter(p => p.tipoProducto === productoSeleccionado)
-      setProductosFiltrados(filtrados)
-    }
+    let filtrados = productoSeleccionado === 'Todos' 
+      ? productos 
+      : productos.filter(p => p.tipoProducto === productoSeleccionado)
+    
+    // Agrupar productos con las mismas características
+    const agrupados = {}
+    filtrados.forEach(producto => {
+      const clave = `${producto.tipoProducto}-${producto.marcaFabricante}-${producto.precio}-${producto.fechaCaducidad}`
+      
+      if (!agrupados[clave]) {
+        agrupados[clave] = {
+          ...producto,
+          cantidad: 1,
+          ids: [producto.id]
+        }
+      } else {
+        agrupados[clave].cantidad += 1
+        agrupados[clave].ids.push(producto.id)
+      }
+    })
+    
+    setProductosFiltrados(Object.values(agrupados))
   }, [productoSeleccionado, productos])
 
   const cargarCatalogoProductos = () => {
@@ -96,7 +114,6 @@ function Tabla({ user }) {
     }
   }
 
-  // 🔥 FUNCIÓN MODIFICADA: Ahora agrega múltiples productos y valida slots máximos
   const agregarProductoATabla = async (e) => {
     e.preventDefault()
     const { plantillaId, fechaCaducidad, cantidad } = productoAgregar
@@ -113,7 +130,6 @@ function Tabla({ user }) {
         return
       }
 
-      // 🔥 VALIDAR SLOTS DISPONIBLES
       const productosDelTipo = productos.filter(p => p.tipoProducto === plantilla.tipoProducto)
       const cantidadActual = productosDelTipo.length
       const cantidadSolicitada = parseInt(cantidad)
@@ -126,7 +142,6 @@ function Tabla({ user }) {
 
       const productosRef = ref(database, `usuarios/${user.uid}/productos`)
 
-      // 🔥 Agregar múltiples productos idénticos
       const promesas = []
       for (let i = 0; i < cantidadSolicitada; i++) {
         const nuevoProductoRef = push(productosRef)
@@ -152,33 +167,75 @@ function Tabla({ user }) {
     }
   }
 
-  // 🔧 Modificado para aceptar parámetro desdeVoz
-  const venderProducto = async (producto, desdeVoz = false) => {
-    if (!desdeVoz && !window.confirm(`¿Deseas vender ${producto.tipoProducto}?`)) return false
+  const venderProducto = async (productoAgrupado, cantidadAVender = null) => {
+    const nombreProducto = productoAgrupado.tipoProducto
+    const cantidadTotal = productoAgrupado.cantidad || 1
+    const clave = `${productoAgrupado.tipoProducto}-${productoAgrupado.marcaFabricante}-${productoAgrupado.precio}-${productoAgrupado.fechaCaducidad}`
+    
+    // Si no se especifica cantidad, usar la que está en el estado
+    const cantidad = cantidadAVender || cantidadVender[clave] || 1
+    
+    if (cantidad > cantidadTotal) {
+      alert(`Solo hay ${cantidadTotal} unidad(es) disponible(s)`)
+      return false
+    }
+    
+    if (!window.confirm(`¿Deseas vender ${cantidad} unidad(es) de ${nombreProducto}?`)) return false
+    
     try {
       const historialRef = ref(database, `usuarios/${user.uid}/historialVentas`)
-      const nuevaVentaRef = push(historialRef)
-      await set(nuevaVentaRef, { ...producto, fechaVenta: new Date().toISOString() })
-      const productoRef = ref(database, `usuarios/${user.uid}/productos/${producto.id}`)
-      await remove(productoRef)
-      if (!desdeVoz) alert('Producto vendido')
+      
+      // Vender solo la cantidad especificada
+      for (let i = 0; i < cantidad; i++) {
+        const id = productoAgrupado.ids[i]
+        const productoOriginal = productos.find(p => p.id === id)
+        if (productoOriginal) {
+          const nuevaVentaRef = push(historialRef)
+          await set(nuevaVentaRef, { ...productoOriginal, fechaVenta: new Date().toISOString() })
+          const productoRef = ref(database, `usuarios/${user.uid}/productos/${id}`)
+          await remove(productoRef)
+        }
+      }
+      
+      // Resetear el contador
+      setCantidadVender(prev => ({ ...prev, [clave]: 1 }))
+      alert(`${cantidad} producto(s) vendido(s)`)
       return true
     } catch (err) {
-      if (!desdeVoz) alert('Error al vender: ' + err.message)
+      alert('Error al vender: ' + err.message)
       return false
     }
   }
 
-  // 🔧 Modificado para aceptar parámetro desdeVoz
-  const eliminarProducto = async (id, nombre, desdeVoz = false) => {
-    if (!desdeVoz && !window.confirm(`Eliminar "${nombre}" de la tabla?`)) return false
+  const eliminarProducto = async (productoAgrupado, cantidadAEliminar = null) => {
+    const nombreProducto = productoAgrupado.tipoProducto
+    const cantidadTotal = productoAgrupado.cantidad || 1
+    const clave = `${productoAgrupado.tipoProducto}-${productoAgrupado.marcaFabricante}-${productoAgrupado.precio}-${productoAgrupado.fechaCaducidad}`
+    
+    // Si no se especifica cantidad, usar la que está en el estado
+    const cantidad = cantidadAEliminar || cantidadEliminar[clave] || 1
+    
+    if (cantidad > cantidadTotal) {
+      alert(`Solo hay ${cantidadTotal} unidad(es) disponible(s)`)
+      return false
+    }
+    
+    if (!window.confirm(`¿Eliminar ${cantidad} unidad(es) de "${nombreProducto}" de la tabla?`)) return false
+    
     try {
-      const productoRef = ref(database, `usuarios/${user.uid}/productos/${id}`)
-      await remove(productoRef)
-      if (!desdeVoz) alert('Producto eliminado')
+      // Eliminar solo la cantidad especificada
+      for (let i = 0; i < cantidad; i++) {
+        const id = productoAgrupado.ids[i]
+        const productoRef = ref(database, `usuarios/${user.uid}/productos/${id}`)
+        await remove(productoRef)
+      }
+      
+      // Resetear el contador
+      setCantidadEliminar(prev => ({ ...prev, [clave]: 1 }))
+      alert(`${cantidad} producto(s) eliminado(s)`)
       return true
     } catch (err) {
-      if (!desdeVoz) alert('Error al eliminar: ' + err.message)
+      alert('Error al eliminar: ' + err.message)
       return false
     }
   }
@@ -296,21 +353,9 @@ function Tabla({ user }) {
               required
             />
             
-            {/* 🔥 CAMPO DE CANTIDAD CON VALIDACIÓN DE SLOTS */}
-            <div style={{ 
-              backgroundColor: 'rgba(247, 184, 1, 0.15)', 
-              padding: '1.5rem', 
-              borderRadius: '8px',
-              border: '2px solid #F7B801',
-              marginTop: '1rem'
-            }}>
-              <label style={{ 
-                display: 'block', 
-                fontWeight: 'bold', 
-                color: '#F7B801',
-                marginBottom: '0.75rem',
-                fontSize: '1rem'
-              }}>
+            {/* CAMPO DE CANTIDAD CON CLASES CSS */}
+            <div className="cantidad-container">
+              <label className="cantidad-label">
                 🔢 Cantidad de productos a agregar:
               </label>
               <input
@@ -320,26 +365,9 @@ function Tabla({ user }) {
                 value={productoAgregar.cantidad}
                 onChange={(e) => setProductoAgregar({ ...productoAgregar, cantidad: e.target.value })}
                 required
-                style={{
-                  width: '100%',
-                  padding: '0.75rem',
-                  fontSize: '1.1rem',
-                  fontWeight: '600',
-                  textAlign: 'center',
-                  border: '2px solid #F7B801',
-                  borderRadius: '8px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                  color: 'white',
-                  boxSizing: 'border-box'
-                }}
+                className="cantidad-input"
               />
-              <p style={{ 
-                margin: '0.75rem 0 0 0', 
-                fontSize: '0.9rem', 
-                color: '#F7B801',
-                textAlign: 'center',
-                fontWeight: '500'
-              }}>
+              <p className="cantidad-mensaje">
                 {productoAgregar.cantidad > 1 
                   ? `✓ Se agregarán ${productoAgregar.cantidad} productos idénticos` 
                   : 'Se agregará 1 producto'}
@@ -358,7 +386,6 @@ function Tabla({ user }) {
           )
           if (!plantilla) return false
 
-          // Validar slots disponibles
           const productosDelTipo = productos.filter(p => p.tipoProducto === plantilla.tipoProducto)
           if (productosDelTipo.length >= parseInt(plantilla.slotsMaximos)) return false
 
@@ -380,19 +407,25 @@ function Tabla({ user }) {
         }}
 
         onVender={async (nombre) => {
-          const producto = productos.find(
+          const productosCoincidentes = productos.filter(
             p => p.tipoProducto.toLowerCase() === nombre.toLowerCase()
           )
-          if (!producto) return false
-          return await venderProducto(producto, true)
+          if (productosCoincidentes.length === 0) return false
+          
+          // Vender el primer producto encontrado (uno solo por comando de voz)
+          const producto = productosCoincidentes[0]
+          return await venderProducto({ ...producto, cantidad: 1, ids: [producto.id] }, 1)
         }}
 
         onEliminar={async (nombre) => {
-          const producto = productos.find(
+          const productosCoincidentes = productos.filter(
             p => p.tipoProducto.toLowerCase() === nombre.toLowerCase()
           )
-          if (!producto) return false
-          return await eliminarProducto(producto.id, producto.tipoProducto, true)
+          if (productosCoincidentes.length === 0) return false
+          
+          // Eliminar el primer producto encontrado (uno solo por comando de voz)
+          const producto = productosCoincidentes[0]
+          return await eliminarProducto({ ...producto, cantidad: 1, ids: [producto.id] }, 1)
         }}
       />
 
@@ -409,39 +442,75 @@ function Tabla({ user }) {
                 <th>Marca</th>
                 <th>Precio</th>
                 <th>Fecha Caducidad</th>
+                <th>Cantidad</th>
                 <th>Acciones</th>
               </tr>
             </thead>
             <tbody>
-              {productosFiltrados.map(producto => (
-                <tr key={producto.id}>
-                  <td>{producto.tipoProducto}</td>
-                  <td>{producto.marcaFabricante}</td>
-                  <td>${parseFloat(producto.precio).toFixed(2)}</td>
-                  <td>{producto.fechaCaducidad ? new Date(producto.fechaCaducidad).toLocaleDateString('es-ES') : '-'}</td>
-                  <td>
-                    <button className="btn-vender" onClick={() => venderProducto(producto)}>
-                      Vender
-                    </button>
-                    <button
-                      onClick={() => eliminarProducto(producto.id, producto.tipoProducto)}
-                      style={{ 
-                        marginLeft: '8px', 
-                        padding: '0.5rem 1rem',
-                        backgroundColor: '#dc3545', 
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '8px',
-                        cursor: 'pointer',
-                        fontWeight: 'bold',
-                        transition: 'all 0.3s'
-                      }}
-                    >
-                      Eliminar
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {productosFiltrados.map((producto, index) => {
+                const clave = `${producto.tipoProducto}-${producto.marcaFabricante}-${producto.precio}-${producto.fechaCaducidad}`
+                const cantVender = cantidadVender[clave] || 1
+                const cantEliminar = cantidadEliminar[clave] || 1
+                
+                return (
+                  <tr key={index}>
+                    <td>{producto.tipoProducto}</td>
+                    <td>{producto.marcaFabricante}</td>
+                    <td>${parseFloat(producto.precio).toFixed(2)}</td>
+                    <td>{producto.fechaCaducidad ? new Date(producto.fechaCaducidad).toLocaleDateString('es-ES') : '-'}</td>
+                    <td>
+                      <span className="cantidad-badge">
+                        {producto.cantidad}
+                      </span>
+                    </td>
+                    <td>
+                      <div className="acciones-container">
+                        {/* VENDER */}
+                        <div className="accion-row">
+                          <input
+                            type="number"
+                            min="1"
+                            max={producto.cantidad}
+                            value={cantVender}
+                            onChange={(e) => {
+                              const valor = Math.min(Math.max(1, parseInt(e.target.value) || 1), producto.cantidad)
+                              setCantidadVender(prev => ({ ...prev, [clave]: valor }))
+                            }}
+                            className="input-cantidad-vender"
+                          />
+                          <button 
+                            className="btn-vender" 
+                            onClick={() => venderProducto(producto)}
+                          >
+                            Vender
+                          </button>
+                        </div>
+                        
+                        {/* ELIMINAR */}
+                        <div className="accion-row">
+                          <input
+                            type="number"
+                            min="1"
+                            max={producto.cantidad}
+                            value={cantEliminar}
+                            onChange={(e) => {
+                              const valor = Math.min(Math.max(1, parseInt(e.target.value) || 1), producto.cantidad)
+                              setCantidadEliminar(prev => ({ ...prev, [clave]: valor }))
+                            }}
+                            className="input-cantidad-eliminar"
+                          />
+                          <button
+                            className="btn-eliminar"
+                            onClick={() => eliminarProducto(producto)}
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         )}
