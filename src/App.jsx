@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard'
 import Tabla from './components/Tabla'
 import HistorialVentas from './components/HistorialVentas'
 import Contactos from './components/Contactos'
+import Scanneo from './components/Scanner/Scanner'
 
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from './config/firebase'
@@ -51,6 +52,8 @@ function App() {
         return <HistorialVentas user={user} />
       case 'Contactos':
         return <Contactos user={user} />
+      case 'Scanneo':
+        return <Scanneo user={user} />
       default:
         return <Dashboard user={user} />
     }
@@ -111,6 +114,8 @@ function App() {
               }`}
               onClick={() => setActiveSection('Historial')}
             >
+              
+              
               Historial de ventas
             </button>
 
@@ -122,6 +127,17 @@ function App() {
             >
               Contactos / Proveedores
             </button>
+
+
+            <button
+              className={`nav-item-sidebar ${
+                activeSection === 'Contactos' ? 'activo' : ''
+              }`}
+              onClick={() => setActiveSection('Scanneo')}
+            >
+            Scanner Inteligente
+            </button>
+            
           </div>
 
           <button
@@ -130,6 +146,7 @@ function App() {
           >
             Cerrar sesión
           </button>
+          
         </aside>
 
         {/* ========== CONTENIDO PRINCIPAL ========== */}
