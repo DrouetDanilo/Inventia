@@ -1,0 +1,342 @@
+/* src/styles/Planes.css */
+
+.planes-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px; 
+  overflow-y: auto;
+}
+
+.planes-content {
+  background: linear-gradient(180deg, #1A1A2E, #16213E);
+  border-radius: 16px;
+  padding: 0.75rem;
+  max-width: 1000px;
+  width: 100%;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(255, 107, 53, 0.3);
+  max-height: 92vh;
+  overflow-y: auto;
+}
+
+.btn-cerrar-planes {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-cerrar-planes:hover {
+  background: #FF6B35;
+  transform: rotate(90deg);
+}
+
+.planes-titulo {
+  text-align: center;
+  color: #fff;
+  font-size: 1.1rem;
+  margin-bottom: 0.2rem;
+  font-weight: 700;
+}
+
+.planes-subtitulo {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.8rem;
+  margin-bottom: 0.75rem;
+}
+
+.planes-subtitulo strong {
+  color: #FF6B35;
+  font-weight: 600;
+}
+
+.planes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.plan-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 0.75rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(255, 107, 53, 0.5);
+  box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
+}
+
+.plan-premium {
+  border-color: rgba(255, 107, 53, 0.4);
+  background: rgba(255, 107, 53, 0.05);
+}
+
+.plan-activo {
+  border-color: #FF6B35;
+  box-shadow: 0 0 30px rgba(255, 107, 53, 0.4);
+}
+
+.plan-badge {
+  position: absolute;
+  top: -12px;
+  right: 30px;
+  background: linear-gradient(135deg, #FF6B35, #e85a2a);
+  color: #fff;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.plan-header {
+  text-align: center;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.plan-header h3 {
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.plan-precio {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.precio-cantidad {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #FF6B35;
+}
+
+.precio-periodo {
+  color: #9ca3af;
+  font-size: 0.8rem;
+}
+
+.plan-caracteristicas {
+  margin-bottom: 0.75rem;
+}
+
+.caracteristica {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0;
+  color: #e5e7eb;
+  font-size: 0.75rem;
+}
+
+.caracteristica .icono {
+  color: #FF6B35;
+  font-weight: 700;
+  font-size: 0.85rem;
+  min-width: 14px;
+}
+
+.caracteristica strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+.btn-plan {
+  width: 100%;
+  padding: 0.55rem 0.85rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-plan-premium {
+  background: linear-gradient(135deg, #FF6B35, #e85a2a);
+  color: #fff;
+}
+
+.btn-plan-premium:hover {
+  background: linear-gradient(135deg, #e85a2a, #d04a1a);
+  transform: scale(1.02);
+  box-shadow: 0 5px 20px rgba(255, 107, 53, 0.5);
+}
+
+.btn-plan-secundario {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-plan-secundario:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-plan-actual {
+  background: rgba(255, 107, 53, 0.2);
+  color: #FF6B35;
+  cursor: default;
+  border: 1px solid #FF6B35;
+}
+
+.planes-nota {
+  background: rgba(255, 107, 53, 0.1);
+  border: 1px solid rgba(255, 107, 53, 0.3);
+  border-radius: 10px;
+  padding: 0.75rem;
+  text-align: center;
+}
+
+.planes-nota p {
+  color: #9ca3af;
+  font-size: 0.75rem;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.planes-nota strong {
+  color: #FF6B35;
+  font-weight: 600;
+}
+
+/* ============ RESPONSIVE ============ */
+
+@media (max-width: 1024px) {
+  .planes-content {
+    padding: 2rem;
+  }
+
+  .planes-titulo {
+    font-size: 1.75rem;
+  }
+
+  .planes-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .planes-container {
+    padding: 20px 1rem; 
+  }
+
+  .planes-content {
+    padding: 1rem;
+    max-height: calc(100vh - 40px);
+  }
+
+  .btn-cerrar-planes {
+    top: 1rem;
+    right: 1rem;
+    width: 35px;
+    height: 35px;
+    font-size: 1.25rem;
+  }
+
+  .planes-titulo {
+    font-size: 1.2rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .planes-subtitulo {
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .planes-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .plan-card {
+    padding: 1rem;
+  }
+
+  .plan-header h3 {
+    font-size: 1rem;
+  }
+
+  .precio-cantidad {
+    font-size: 1.75rem;
+  }
+
+  .precio-periodo {
+    font-size: 0.8rem;
+  }
+
+  .caracteristica {
+    font-size: 0.75rem;
+    padding: 0.3rem 0;
+  }
+
+  .btn-plan {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  .planes-nota {
+    padding: 0.65rem;
+  }
+
+  .planes-nota p {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .planes-content {
+    padding: 0.75rem;
+  }
+
+  .planes-titulo {
+    font-size: 1.1rem;
+  }
+
+  .plan-card {
+    padding: 0.85rem;
+  }
+
+  .plan-header {
+    margin-bottom: 0.85rem;
+    padding-bottom: 0.65rem;
+  }
+
+  .precio-cantidad {
+    font-size: 1.5rem;
+  }
+}

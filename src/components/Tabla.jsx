@@ -1,3 +1,4 @@
+// src/components/Tabla.jsx
 import { useState, useEffect } from 'react'
 import { database } from '../config/firebase'
 import { ref, push, set, onValue, remove } from 'firebase/database'
@@ -26,11 +27,13 @@ function Tabla({ user }) {
   const [cantidadEliminar, setCantidadEliminar] = useState({})
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [planUsuario, setPlanUsuario] = useState({ tipo: 'gratuito', limiteProductos: 100 })
 
   useEffect(() => {
     if (user?.uid) {
       cargarCatalogoProductos()
       cargarProductos()
+      cargarPlanUsuario()
     } else {
       setLoading(false)
     }
@@ -41,7 +44,6 @@ function Tabla({ user }) {
       ? productos 
       : productos.filter(p => p.tipoProducto === productoSeleccionado)
     
-    // Agrupar productos con las mismas características
     const agrupados = {}
     filtrados.forEach(producto => {
       const clave = `${producto.tipoProducto}-${producto.marcaFabricante}-${producto.precio}-${producto.fechaCaducidad}`
@@ -60,6 +62,17 @@ function Tabla({ user }) {
     
     setProductosFiltrados(Object.values(agrupados))
   }, [productoSeleccionado, productos])
+
+  const cargarPlanUsuario = () => {
+    const planRef = ref(database, `usuarios/${user.uid}/plan`)
+    onValue(planRef, (snapshot) => {
+      const data = snapshot.val()
+      setPlanUsuario({
+        tipo: data?.tipo || 'gratuito',
+        limiteProductos: data?.limiteProductos || 100
+      })
+    })
+  }
 
   const cargarCatalogoProductos = () => {
     const catalogoRef = ref(database, `usuarios/${user.uid}/catalogoProductos`)
@@ -99,6 +112,16 @@ function Tabla({ user }) {
       alert('Completa todos los campos del catálogo')
       return
     }
+
+    // VALIDACIÓN DE LÍMITE DE TIPOS DE PRODUCTOS (PLANTILLAS)
+    const totalTiposProductos = catalogoProductos.length
+    const limiteGlobal = planUsuario.limiteProductos
+
+    if (limiteGlobal !== -1 && totalTiposProductos >= limiteGlobal) {
+      alert(`❌ Límite de tipos de productos alcanzado!\n\nPlan ${planUsuario.tipo === 'premium' ? 'Premium' : 'Gratuito'}: ${limiteGlobal === -1 ? 'Ilimitado' : limiteGlobal} tipos de productos\nActual: ${totalTiposProductos}\n\n${planUsuario.tipo === 'gratuito' ? '💡 Mejora a Premium para tipos de productos ilimitados' : ''}`)
+      return
+    }
+
     try {
       const catalogoRef = ref(database, `usuarios/${user.uid}/catalogoProductos`)
       const nuevoRef = push(catalogoRef)
@@ -108,9 +131,9 @@ function Tabla({ user }) {
       })
       setNuevoCatalogoProducto({ tipoProducto: '', marcaFabricante: '', precio: '', slotsMaximos: '' })
       setMostrarFormCatalogo(false)
-      alert('Plantilla de producto creada')
+      alert('✅ Nuevo tipo de producto creado')
     } catch (err) {
-      alert('Error al crear plantilla: ' + err.message)
+      alert('Error al crear producto: ' + err.message)
     }
   }
 
@@ -119,14 +142,14 @@ function Tabla({ user }) {
     const { plantillaId, fechaCaducidad, cantidad } = productoAgregar
     
     if (!plantillaId || !fechaCaducidad || !cantidad || cantidad < 1) {
-      alert('Selecciona una plantilla, completa fecha de caducidad y cantidad válida')
+      alert('Selecciona un producto, completa fecha de caducidad y cantidad válida')
       return
     }
 
     try {
       const plantilla = catalogoProductos.find(p => p.id === plantillaId)
       if (!plantilla) {
-        alert('Plantilla no encontrada')
+        alert('Producto no encontrado')
         return
       }
 
@@ -136,7 +159,7 @@ function Tabla({ user }) {
       const slotsMaximos = parseInt(plantilla.slotsMaximos)
 
       if (cantidadActual + cantidadSolicitada > slotsMaximos) {
-        alert(`❌ No se puede agregar. Límite: ${slotsMaximos} productos.\nActual: ${cantidadActual}\nIntentando agregar: ${cantidadSolicitada}\nDisponibles: ${slotsMaximos - cantidadActual}`)
+        alert(`❌ No se puede agregar. Límite: ${slotsMaximos} unidades de este producto.\nActual: ${cantidadActual}\nIntentando agregar: ${cantidadSolicitada}\nDisponibles: ${slotsMaximos - cantidadActual}`)
         return
       }
 
@@ -161,7 +184,7 @@ function Tabla({ user }) {
 
       setProductoAgregar({ plantillaId: '', fechaCaducidad: '', cantidad: 1 })
       setMostrarFormAgregar(false)
-      alert(`✅ ${cantidadSolicitada} producto(s) agregado(s).\nTotal ahora: ${cantidadActual + cantidadSolicitada}/${slotsMaximos}`)
+      alert(`✅ ${cantidadSolicitada} unidad(es) agregada(s) al inventario`)
     } catch (err) {
       alert('Error al agregar productos: ' + err.message)
     }
@@ -172,7 +195,6 @@ function Tabla({ user }) {
     const cantidadTotal = productoAgrupado.cantidad || 1
     const clave = `${productoAgrupado.tipoProducto}-${productoAgrupado.marcaFabricante}-${productoAgrupado.precio}-${productoAgrupado.fechaCaducidad}`
     
-    // Si no se especifica cantidad, usar la que está en el estado
     const cantidad = cantidadAVender || cantidadVender[clave] || 1
     
     if (cantidad > cantidadTotal) {
@@ -185,7 +207,6 @@ function Tabla({ user }) {
     try {
       const historialRef = ref(database, `usuarios/${user.uid}/historialVentas`)
       
-      // Vender solo la cantidad especificada
       for (let i = 0; i < cantidad; i++) {
         const id = productoAgrupado.ids[i]
         const productoOriginal = productos.find(p => p.id === id)
@@ -197,7 +218,6 @@ function Tabla({ user }) {
         }
       }
       
-      // Resetear el contador
       setCantidadVender(prev => ({ ...prev, [clave]: 1 }))
       alert(`${cantidad} producto(s) vendido(s)`)
       return true
@@ -212,7 +232,6 @@ function Tabla({ user }) {
     const cantidadTotal = productoAgrupado.cantidad || 1
     const clave = `${productoAgrupado.tipoProducto}-${productoAgrupado.marcaFabricante}-${productoAgrupado.precio}-${productoAgrupado.fechaCaducidad}`
     
-    // Si no se especifica cantidad, usar la que está en el estado
     const cantidad = cantidadAEliminar || cantidadEliminar[clave] || 1
     
     if (cantidad > cantidadTotal) {
@@ -223,14 +242,12 @@ function Tabla({ user }) {
     if (!window.confirm(`¿Eliminar ${cantidad} unidad(es) de "${nombreProducto}" de la tabla?`)) return false
     
     try {
-      // Eliminar solo la cantidad especificada
       for (let i = 0; i < cantidad; i++) {
         const id = productoAgrupado.ids[i]
         const productoRef = ref(database, `usuarios/${user.uid}/productos/${id}`)
         await remove(productoRef)
       }
       
-      // Resetear el contador
       setCantidadEliminar(prev => ({ ...prev, [clave]: 1 }))
       alert(`${cantidad} producto(s) eliminado(s)`)
       return true
@@ -256,9 +273,41 @@ function Tabla({ user }) {
     </div>
   )
 
+  const totalTiposProductos = catalogoProductos.length
+  const limiteGlobal = planUsuario.limiteProductos
+  const porcentajeUso = limiteGlobal !== -1 ? (totalTiposProductos / limiteGlobal) * 100 : 0
+
   return (
     <div className="tabla-container">
       <h2>Gestión de Productos</h2>
+
+      {/* INDICADOR DE LÍMITE DEL PLAN - AHORA PARA TIPOS DE PRODUCTOS */}
+      <div className="limite-plan-info">
+        <div className="limite-texto">
+          <span className="limite-label">Tipos de productos creados:</span>
+          <span className="limite-valor">
+            {totalTiposProductos} {limiteGlobal !== -1 ? `/ ${limiteGlobal}` : '(ilimitado)'}
+          </span>
+        </div>
+        
+        {limiteGlobal !== -1 && (
+          <div className="limite-barra-container">
+            <div 
+              className="limite-barra-progreso" 
+              style={{ 
+                width: `${porcentajeUso}%`,
+                background: porcentajeUso > 90 ? '#EF4444' : porcentajeUso > 70 ? '#F59E0B' : '#10B981'
+              }}
+            />
+          </div>
+        )}
+        
+        {planUsuario.tipo === 'gratuito' && totalTiposProductos >= limiteGlobal * 0.8 && (
+          <p className="limite-advertencia">
+            ⚠️ Te estás acercando al límite de tipos de productos. Considera mejorar a Premium para tipos ilimitados.
+          </p>
+        )}
+      </div>
 
       <div className="controles-superiores">
         <div className="selector-producto">
@@ -276,13 +325,13 @@ function Tabla({ user }) {
             className="btn-registrar-tipo"
             onClick={() => setMostrarFormCatalogo(!mostrarFormCatalogo)}
           >
-            {mostrarFormCatalogo ? 'Cancelar' : '+ Crear Plantilla'}
+            {mostrarFormCatalogo ? 'Cancelar' : '+ Crear Producto'}
           </button>
           <button 
             className="btn-agregar-producto"
             onClick={() => setMostrarFormAgregar(!mostrarFormAgregar)}
           >
-            {mostrarFormAgregar ? 'Cancelar' : '+ Agregar a Tabla'}
+            {mostrarFormAgregar ? 'Cancelar' : '+ Agregar Producto'}
           </button>
         </div>
       </div>
@@ -290,7 +339,7 @@ function Tabla({ user }) {
       {mostrarFormCatalogo && (
         <div className="formulario-modal">
           <form onSubmit={registrarCatalogoProducto}>
-            <h3>Crear Plantilla de Producto</h3>
+            <h3>Crear Nuevo Tipo de Producto</h3>
             <input
               type="text"
               placeholder="Nombre del producto"
@@ -316,12 +365,12 @@ function Tabla({ user }) {
             <input
               type="number"
               min="1"
-              placeholder="Slots máximos (cantidad máxima de productos)"
+              placeholder="Cantidad máxima de unidades de este producto"
               value={nuevoCatalogoProducto.slotsMaximos}
               onChange={(e) => setNuevoCatalogoProducto({ ...nuevoCatalogoProducto, slotsMaximos: e.target.value })}
               required
             />
-            <button type="submit" className="btn-guardar">Guardar plantilla</button>
+            <button type="submit" className="btn-guardar">Crear producto</button>
           </form>
         </div>
       )}
@@ -329,13 +378,13 @@ function Tabla({ user }) {
       {mostrarFormAgregar && (
         <div className="formulario-modal">
           <form onSubmit={agregarProductoATabla}>
-            <h3>Agregar Producto(s) a la Tabla</h3>
+            <h3>Agregar Unidades al Inventario</h3>
             <select
               value={productoAgregar.plantillaId}
               onChange={(e) => setProductoAgregar({ ...productoAgregar, plantillaId: e.target.value })}
               required
             >
-              <option value="">Seleccionar plantilla</option>
+              <option value="">Seleccionar producto</option>
               {catalogoProductos.map(p => {
                 const productosDelTipo = productos.filter(prod => prod.tipoProducto === p.tipoProducto)
                 const slotsDisponibles = parseInt(p.slotsMaximos) - productosDelTipo.length
@@ -353,10 +402,9 @@ function Tabla({ user }) {
               required
             />
             
-            {/* CAMPO DE CANTIDAD CON CLASES CSS */}
             <div className="cantidad-container">
               <label className="cantidad-label">
-                🔢 Cantidad de productos a agregar:
+                🔢 Cantidad de unidades a agregar:
               </label>
               <input
                 type="number"
@@ -369,12 +417,12 @@ function Tabla({ user }) {
               />
               <p className="cantidad-mensaje">
                 {productoAgregar.cantidad > 1 
-                  ? `✓ Se agregarán ${productoAgregar.cantidad} productos idénticos` 
-                  : 'Se agregará 1 producto'}
+                  ? `✓ Se agregarán ${productoAgregar.cantidad} unidades idénticas` 
+                  : 'Se agregará 1 unidad'}
               </p>
             </div>
 
-            <button type="submit" className="btn-guardar">Agregar a tabla</button>
+            <button type="submit" className="btn-guardar">Agregar al inventario</button>
           </form>
         </div>
       )}
@@ -412,7 +460,6 @@ function Tabla({ user }) {
           )
           if (productosCoincidentes.length === 0) return false
           
-          // Vender el primer producto encontrado (uno solo por comando de voz)
           const producto = productosCoincidentes[0]
           return await venderProducto({ ...producto, cantidad: 1, ids: [producto.id] }, 1)
         }}
@@ -423,7 +470,6 @@ function Tabla({ user }) {
           )
           if (productosCoincidentes.length === 0) return false
           
-          // Eliminar el primer producto encontrado (uno solo por comando de voz)
           const producto = productosCoincidentes[0]
           return await eliminarProducto({ ...producto, cantidad: 1, ids: [producto.id] }, 1)
         }}
@@ -465,7 +511,6 @@ function Tabla({ user }) {
                     </td>
                     <td>
                       <div className="acciones-container">
-                        {/* VENDER */}
                         <div className="accion-row">
                           <input
                             type="number"
@@ -486,7 +531,6 @@ function Tabla({ user }) {
                           </button>
                         </div>
                         
-                        {/* ELIMINAR */}
                         <div className="accion-row">
                           <input
                             type="number"

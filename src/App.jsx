@@ -1,3 +1,4 @@
+// src/App.jsx
 import { useState, useEffect } from 'react'
 import './App.css'
 
@@ -7,14 +8,18 @@ import Tabla from './components/Tabla'
 import HistorialVentas from './components/HistorialVentas'
 import Contactos from './components/Contactos'
 import Scanneo from './components/Scanner/Scanner'
+import Planes from './components/Planes'
 
 import { onAuthStateChanged } from 'firebase/auth'
-import { auth } from './config/firebase'
+import { auth, database } from './config/firebase'
+import { ref, onValue } from 'firebase/database'
 
 function App() {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
   const [activeSection, setActiveSection] = useState('Inicio')
+  const [mostrarPlanes, setMostrarPlanes] = useState(false)
+  const [planActual, setPlanActual] = useState('gratuito')
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -24,6 +29,17 @@ function App() {
 
     return () => unsubscribe()
   }, [])
+
+  // Cargar plan del usuario
+  useEffect(() => {
+    if (user?.uid) {
+      const planRef = ref(database, `usuarios/${user.uid}/plan`)
+      onValue(planRef, (snapshot) => {
+        const data = snapshot.val()
+        setPlanActual(data?.tipo || 'gratuito')
+      })
+    }
+  }, [user])
 
   if (loading) {
     return (
@@ -89,6 +105,16 @@ function App() {
             </div>
           </div>
 
+          {/* INDICADOR DE PLAN ACTUAL */}
+          <div className="plan-badge-sidebar">
+            <span className="plan-icono">
+              {planActual === 'premium' ? '✨' : '🆓'}
+            </span>
+            <span className="plan-texto">
+              {planActual === 'premium' ? 'Premium' : 'Gratuito'}
+            </span>
+          </div>
+
           <div className="sidebar-nav">
             <button
               className={`nav-item-sidebar ${
@@ -114,8 +140,6 @@ function App() {
               }`}
               onClick={() => setActiveSection('Historial')}
             >
-              
-              
               Historial de ventas
             </button>
 
@@ -128,16 +152,22 @@ function App() {
               Contactos / Proveedores
             </button>
 
-
             <button
               className={`nav-item-sidebar ${
-                activeSection === 'Contactos' ? 'activo' : ''
+                activeSection === 'Scanneo' ? 'activo' : ''
               }`}
               onClick={() => setActiveSection('Scanneo')}
             >
-            Scanner Inteligente
+              Scanner Inteligente
             </button>
-            
+
+            {/* BOTÓN DE PLANES */}
+            <button
+              className="nav-item-sidebar btn-planes"
+              onClick={() => setMostrarPlanes(true)}
+            >
+              🎯 Mejorar Plan
+            </button>
           </div>
 
           <button
@@ -146,17 +176,23 @@ function App() {
           >
             Cerrar sesión
           </button>
-          
         </aside>
 
         {/* ========== CONTENIDO PRINCIPAL ========== */}
         <main className="main-content">
-          {/* reutilizamos tu clase mainSection para que respeten los paddings */}
           <div className="mainSection">
             {renderContent()}
           </div>
         </main>
       </div>
+
+      {/* MODAL DE PLANES */}
+      {mostrarPlanes && (
+        <Planes 
+          user={user} 
+          onClose={() => setMostrarPlanes(false)} 
+        />
+      )}
     </div>
   )
 }
