@@ -171,6 +171,51 @@ function Contactos({ user }) {
     setPedidoActual([])
   }
 
+  const EnviarPorEmail = () => {
+    const productosConCantidad = pedidoActual.filter(item => item.cantidad > 0)
+    
+    if (productosConCantidad.length === 0) {
+      alert('Debes seleccionar al menos un producto con cantidad mayor a 0')
+      return
+    }
+
+    if (!distribuidorSeleccionado.email) {
+      alert('Este distribuidor no tiene un correo electrónico registrado')
+      return
+    }
+
+    // Construir mensaje
+    let mensaje = `¡Hola! Quisiera realizar el siguiente pedido:\n\n`
+    
+    productosConCantidad.forEach((item, index) => {
+      mensaje += `${index + 1}. ${item.tipoProducto} - ${item.marcaFabricante}\n`
+      mensaje += `   Cantidad: ${item.cantidad} unidades\n`
+      mensaje += `   Precio unitario: $${item.precio}\n`
+      mensaje += `   Subtotal: $${(item.cantidad * parseFloat(item.precio)).toFixed(2)}\n\n`
+    })
+
+    const total = productosConCantidad.reduce(
+      (sum, item) => sum + (item.cantidad * parseFloat(item.precio)), 
+      0
+    )
+    
+    mensaje += `TOTAL: $${total.toFixed(2)}\n\n`
+    mensaje += `Gracias por su atención.`
+
+    // Preparar email
+    const asunto = `Pedido de ${distribuidorSeleccionado.marcaRepresentada}`
+    const cuerpo = encodeURIComponent(mensaje)
+    
+    // Abrir cliente de correo
+    const mailtoLink = `mailto:${distribuidorSeleccionado.email}?subject=${encodeURIComponent(asunto)}&body=${cuerpo}`
+    window.location.href = mailtoLink
+
+    // Resetear pedido
+    setMostrarPedido(false)
+    setDistribuidorSeleccionado(null)
+    setPedidoActual([])
+  }
+
   const ObtenerMarcasUnicas = () => {
     const marcas = catalogoProductos.map(prod => prod.marcaFabricante)
     return [...new Set(marcas)].sort()
@@ -305,7 +350,7 @@ function Contactos({ user }) {
                 className="btn-hacer-pedido"
                 onClick={() => IniciarPedido(dist)}
               >
-                Hacer Pedido por WhatsApp
+                Hacer Pedido
               </button>
             </div>
           ))
@@ -379,12 +424,22 @@ function Contactos({ user }) {
               ${pedidoActual.reduce((sum, item) => sum + (item.cantidad * parseFloat(item.precio)), 0).toFixed(2)}
             </div>
 
-            <button 
-              className="btn-enviar-whatsapp"
-              onClick={EnviarMensajeWhatsApp}
-            >
-              📱 Enviar Pedido por WhatsApp
-            </button>
+            <div className="botones-envio">
+              <button 
+                className="btn-enviar-whatsapp"
+                onClick={EnviarMensajeWhatsApp}
+              >
+                📱 Enviar por WhatsApp
+              </button>
+              
+              <button 
+                className="btn-enviar-email"
+                onClick={EnviarPorEmail}
+                disabled={!distribuidorSeleccionado.email}
+              >
+                ✉️ Enviar por Email
+              </button>
+            </div>
           </div>
         </div>
       )}

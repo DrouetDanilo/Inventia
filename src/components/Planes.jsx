@@ -108,7 +108,7 @@ function Planes({ user, onClose }) {
             <div className="plan-header">
               <h3>✨ Plan Premium</h3>
               <div className="plan-precio">
-                <span className="precio-cantidad">$5.99</span>
+                <span className="precio-cantidad">$9.99</span>
                 <span className="precio-periodo">/mes</span>
               </div>
             </div>

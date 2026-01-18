@@ -1,11 +1,11 @@
 /* ============ HISTORIAL DE VENTAS ============ */
 .historial-container {
   padding: 2rem;
-  color: white;
+  color: var(--text-primary);
 }
 
 .historial-title {
-  color: #FF6B35;
+  color: var(--accent-color);
   margin-bottom: 2rem;
   text-align: center;
   font-size: 2rem;
@@ -18,10 +18,10 @@
   flex-wrap: wrap;
   gap: 1.5rem;
   margin-bottom: 2rem;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--card-bg);
   padding: 1.5rem;
   border-radius: 12px;
-  border: 2px solid rgba(255, 107, 53, 0.3);
+  border: 2px solid var(--table-border);
 }
 
 .filtro-tiempo,
@@ -34,7 +34,7 @@
 
 .filtro-tiempo label,
 .selector-fecha label {
-  color: #F7B801;
+  color: var(--warning-color);
   font-weight: bold;
 }
 
@@ -42,9 +42,9 @@
 .selector-fecha input {
   padding: 0.75rem 1rem;
   border-radius: 8px;
-  border: 2px solid #FF6B35;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
+  border: 2px solid var(--accent-color);
+  background-color: var(--input-bg);
+  color: var(--text-primary);
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s;
@@ -52,19 +52,20 @@
 
 .filtro-tiempo select:hover,
 .selector-fecha input:hover {
-  border-color: #F7B801;
+  border-color: var(--warning-color);
 }
 
 .filtro-tiempo select option {
-  background-color: #1A1A2E;
-  color: white;
+  background-color: var(--modal-bg);
+  color: var(--text-primary);
 }
 
 .total-periodo {
-  background-color: #FF6B35;
+  background-color: var(--accent-color);
   padding: 0.75rem 1.5rem;
   border-radius: 8px;
   font-size: 1.1rem;
+  color: white;
   box-shadow: 0 2px 8px rgba(255, 107, 53, 0.4);
 }
 
@@ -79,15 +80,19 @@
 }
 
 .resumen-productos-card {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--card-bg);
   border-radius: 12px;
   padding: 1.5rem;
-  border: 2px solid rgba(255, 107, 53, 0.3);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--table-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .resumen-productos-card {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .resumen-productos-card h3 {
-  color: #FF6B35;
+  color: var(--accent-color);
   margin-bottom: 1.5rem;
   text-align: center;
   font-size: 1.3rem;
@@ -102,16 +107,15 @@
 }
 
 .producto-resumen-item {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--card-bg-alt);
   padding: 1rem;
   border-radius: 8px;
-  border-left: 4px solid #FF6B35;
+  border-left: 4px solid var(--accent-color);
   transition: all 0.3s;
 }
 
 .producto-resumen-item:hover {
   transform: translateX(5px);
-  background-color: rgba(255, 255, 255, 0.15);
   box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
 }
 
@@ -122,13 +126,13 @@
 .producto-nombre {
   font-weight: bold;
   font-size: 1.1rem;
-  color: #F7B801;
+  color: var(--warning-color);
   margin-bottom: 0.25rem;
 }
 
 .producto-marca {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--text-secondary);
 }
 
 .producto-stats {
@@ -146,7 +150,7 @@
 
 .stat-label {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
 }
 
 .stat-valor {
@@ -155,23 +159,27 @@
 }
 
 .stat-valor.cantidad {
-  color: #00BA88;
+  color: var(--success-color);
 }
 
 .stat-valor.dinero {
-  color: #F7B801;
+  color: var(--warning-color);
 }
 
 .ventas-detalle-card {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--card-bg);
   border-radius: 12px;
   padding: 1.5rem;
-  border: 2px solid rgba(255, 107, 53, 0.3);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--table-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .ventas-detalle-card {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .ventas-detalle-card h3 {
-  color: #FF6B35;
+  color: var(--accent-color);
   margin-bottom: 1.5rem;
   text-align: center;
   font-size: 1.3rem;
@@ -186,12 +194,12 @@
 .tabla-historial {
   width: 100%;
   border-collapse: collapse;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--table-bg);
   min-width: 700px;
 }
 
 .tabla-historial thead {
-  background-color: #FF6B35;
+  background-color: var(--accent-color);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -202,13 +210,13 @@
   text-align: left;
   font-weight: bold;
   color: white;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 2px solid var(--table-border);
 }
 
 .tabla-historial td {
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  border-bottom: 1px solid var(--table-border);
+  color: var(--text-primary);
 }
 
 .tabla-historial tbody tr {
@@ -216,17 +224,17 @@
 }
 
 .tabla-historial tbody tr:hover {
-  background-color: rgba(255, 107, 53, 0.1);
+  background-color: var(--hover-bg);
 }
 
 .fecha-cell {
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--text-secondary);
 }
 
 .precio-cell {
   font-weight: bold;
-  color: #00BA88;
+  color: var(--success-color);
 }
 
 .texto-centro {
@@ -240,16 +248,16 @@
 .tabla-vacia-historial {
   text-align: center;
   padding: 3rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
 }
 
 .sin-datos {
   text-align: center;
   padding: 2rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
 }
 
-/* Scrollbar personalizado */
+/* Scrollbar */
 .resumen-lista::-webkit-scrollbar,
 .tabla-wrapper-historial::-webkit-scrollbar {
   width: 8px;
@@ -257,17 +265,17 @@
 
 .resumen-lista::-webkit-scrollbar-track,
 .tabla-wrapper-historial::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--card-bg);
   border-radius: 4px;
 }
 
 .resumen-lista::-webkit-scrollbar-thumb,
 .tabla-wrapper-historial::-webkit-scrollbar-thumb {
-  background: #FF6B35;
+  background: var(--accent-color);
   border-radius: 4px;
 }
 
 .resumen-lista::-webkit-scrollbar-thumb:hover,
 .tabla-wrapper-historial::-webkit-scrollbar-thumb:hover {
-  background: #e85a2a;
+  background: var(--accent-hover);
 }

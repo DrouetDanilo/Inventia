@@ -1,21 +1,21 @@
 /* ============ TABLA CONTAINER ============ */
 .tabla-container {
   padding: 2rem;
-  color: white;
+  color: var(--text-primary);
   width: 100%;
   min-height: 100vh;
   box-sizing: border-box;
 }
 
 .tabla-container h2 {
-  color: #FF6B35;
+  color: var(--accent-color);
   margin-bottom: 2rem;
   text-align: center;
   font-size: 2rem;
   width: 100%;
 }
 
-/* Controles superiores - FORZAR ANCHO COMPLETO */
+/* Controles superiores */
 .controles-superiores {
   display: flex;
   justify-content: space-between;
@@ -23,10 +23,10 @@
   margin-bottom: 2rem;
   flex-wrap: wrap;
   gap: 1rem;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--card-bg);
   padding: 1.5rem;
   border-radius: 12px;
-  border: 2px solid rgba(255, 107, 53, 0.3);
+  border: 2px solid var(--table-border);
   width: 100%;
   box-sizing: border-box;
 }
@@ -42,7 +42,7 @@
 
 .selector-producto label {
   font-weight: bold;
-  color: #F7B801;
+  color: var(--warning-color);
   font-size: 1rem;
   white-space: nowrap;
 }
@@ -50,9 +50,9 @@
 .selector-producto select {
   padding: 0.75rem 1rem;
   border-radius: 8px;
-  border: 2px solid #FF6B35;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
+  border: 2px solid var(--accent-color);
+  background-color: var(--input-bg);
+  color: var(--text-primary);
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s;
@@ -61,12 +61,12 @@
 }
 
 .selector-producto select:hover {
-  border-color: #F7B801;
+  border-color: var(--warning-color);
 }
 
 .selector-producto select option {
-  background-color: #1A1A2E;
-  color: white;
+  background-color: var(--modal-bg);
+  color: var(--text-primary);
 }
 
 .botones-accion {
@@ -77,7 +77,9 @@
 }
 
 .btn-registrar-tipo,
-.btn-agregar-producto {
+.btn-agregar-producto,
+.btn-importar,
+.btn-exportar {
   padding: 0.75rem 1.5rem;
   border: none;
   border-radius: 8px;
@@ -89,7 +91,7 @@
 }
 
 .btn-registrar-tipo {
-  background-color: #00BA88;
+  background-color: var(--success-color);
   color: white;
 }
 
@@ -110,20 +112,24 @@
   box-shadow: 0 4px 12px rgba(0, 78, 137, 0.4);
 }
 
-/* Formularios modales - FORZAR ANCHO COMPLETO */
+/* Formularios modales */
 .formulario-modal {
-  background-color: rgba(255, 107, 53, 0.15);
-  border: 2px solid #FF6B35;
+  background-color: var(--card-bg);
+  border: 2px solid var(--accent-color);
   border-radius: 12px;
   padding: 2rem;
   margin-bottom: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   width: 100%;
   box-sizing: border-box;
 }
 
+[data-theme="light"] .formulario-modal {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
 .formulario-modal h3 {
-  color: #FF6B35;
+  color: var(--accent-color);
   margin-bottom: 1.5rem;
   text-align: center;
   font-size: 1.5rem;
@@ -142,9 +148,9 @@
 .formulario-modal select {
   padding: 0.75rem;
   border-radius: 8px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
+  border: 2px solid var(--input-border);
+  background-color: var(--input-bg);
+  color: var(--text-primary);
   font-size: 1rem;
   transition: all 0.3s;
   width: 100%;
@@ -154,22 +160,22 @@
 .formulario-modal input:focus,
 .formulario-modal select:focus {
   outline: none;
-  border-color: #FF6B35;
-  background-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--accent-color);
+  background-color: var(--card-bg-alt);
 }
 
 .formulario-modal input::placeholder {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
 }
 
 .formulario-modal select option {
-  background-color: #1A1A2E;
-  color: white;
+  background-color: var(--modal-bg);
+  color: var(--text-primary);
 }
 
 .btn-guardar {
   padding: 0.75rem;
-  background-color: #FF6B35;
+  background-color: var(--accent-color);
   color: white;
   border: none;
   border-radius: 8px;
@@ -181,24 +187,24 @@
 }
 
 .btn-guardar:hover {
-  background-color: #e85a2a;
+  background-color: var(--accent-hover);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
 }
 
-/* ============ CAMPO DE CANTIDAD ============ */
+/* Campo de cantidad */
 .cantidad-container {
-  background-color: rgba(247, 184, 1, 0.15);
+  background-color: var(--card-bg-alt);
   padding: 1.5rem;
   border-radius: 8px;
-  border: 2px solid #F7B801;
+  border: 2px solid var(--warning-color);
   margin-top: 1rem;
 }
 
 .cantidad-label {
   display: block;
   font-weight: bold;
-  color: #F7B801;
+  color: var(--warning-color);
   margin-bottom: 0.75rem;
   font-size: 1rem;
 }
@@ -209,43 +215,47 @@
   font-size: 1.1rem;
   font-weight: 600;
   text-align: center;
-  border: 2px solid #F7B801;
+  border: 2px solid var(--warning-color);
   border-radius: 8px;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
+  background-color: var(--input-bg);
+  color: var(--text-primary);
   box-sizing: border-box;
 }
 
 .cantidad-mensaje {
   margin: 0.75rem 0 0 0;
   font-size: 0.9rem;
-  color: #F7B801;
+  color: var(--warning-color);
   text-align: center;
   font-weight: 500;
 }
 
-/* Tabla - FORZAR ANCHO COMPLETO */
+/* Tabla */
 .tabla-wrapper {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--table-bg);
   border-radius: 12px;
   padding: 1.5rem;
   overflow-x: auto;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-  border: 2px solid rgba(255, 107, 53, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border: 2px solid var(--table-border);
   width: 100%;
   box-sizing: border-box;
+}
+
+[data-theme="light"] .tabla-wrapper {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .tabla-productos {
   width: 100%;
   border-collapse: collapse;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--table-bg);
   border-radius: 8px;
   overflow: hidden;
 }
 
 .tabla-productos thead {
-  background-color: #FF6B35;
+  background-color: var(--accent-color);
   position: sticky;
   top: 0;
   z-index: 10;
@@ -257,13 +267,13 @@
   font-weight: bold;
   color: white;
   font-size: 1rem;
-  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 2px solid var(--table-border);
 }
 
 .tabla-productos td {
   padding: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  border-bottom: 1px solid var(--table-border);
+  color: var(--text-primary);
 }
 
 .tabla-productos tbody tr {
@@ -271,16 +281,16 @@
 }
 
 .tabla-productos tbody tr:hover {
-  background-color: rgba(255, 107, 53, 0.1);
+  background-color: var(--hover-bg);
 }
 
 /* Filas con alertas */
 .tabla-productos tr.proximo-caducar {
-  background-color: rgba(247, 184, 1, 0.2);
+  background-color: rgba(247, 184, 1, 0.15);
 }
 
 .tabla-productos tr.caducado {
-  background-color: rgba(220, 53, 69, 0.2);
+  background-color: rgba(220, 53, 69, 0.15);
 }
 
 /* Badges */
@@ -295,19 +305,23 @@
 }
 
 .badge-caducado {
-  background-color: #dc3545;
+  background-color: var(--danger-color);
   color: white;
 }
 
 .badge-proximo {
-  background-color: #F7B801;
+  background-color: var(--warning-color);
+  color: white;
+}
+
+[data-theme="light"] .badge-proximo {
   color: #1A1A2E;
 }
 
-/* ============ BOTONES DE ACCIÓN EN TABLA ============ */
+/* Botones de acción */
 .btn-vender {
   padding: 0.5rem 1rem;
-  background-color: #00BA88;
+  background-color: var(--success-color);
   color: white;
   border: none;
   border-radius: 8px;
@@ -331,7 +345,7 @@
 .btn-eliminar {
   margin-left: 8px;
   padding: 0.5rem 1rem;
-  background-color: #dc3545;
+  background-color: var(--danger-color);
   color: white;
   border: none;
   border-radius: 8px;
@@ -346,18 +360,18 @@
   box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
 }
 
-/* ============ COLUMNA CANTIDAD ============ */
+/* Cantidad badge */
 .cantidad-badge {
   font-weight: bold;
   font-size: 1.1rem;
-  color: #F7B801;
-  background: rgba(247, 184, 1, 0.15);
+  color: var(--warning-color);
+  background: var(--card-bg-alt);
   padding: 0.3rem 0.8rem;
   border-radius: 8px;
   display: inline-block;
 }
 
-/* ============ ACCIONES CON INPUTS ============ */
+/* Acciones con inputs */
 .acciones-container {
   display: flex;
   flex-direction: column;
@@ -379,10 +393,10 @@
 .input-cantidad-vender {
   width: 60px;
   padding: 0.4rem;
-  border: 2px solid #00BA88;
+  border: 2px solid var(--success-color);
   border-radius: 6px;
-  background-color: rgba(0, 186, 136, 0.1);
-  color: white;
+  background-color: var(--input-bg);
+  color: var(--text-primary);
   text-align: center;
   font-weight: bold;
   transition: all 0.3s;
@@ -390,18 +404,17 @@
 
 .input-cantidad-vender:focus {
   outline: none;
-  border-color: #00BA88;
-  background-color: rgba(0, 186, 136, 0.2);
+  border-color: var(--success-color);
   box-shadow: 0 0 8px rgba(0, 186, 136, 0.3);
 }
 
 .input-cantidad-eliminar {
   width: 60px;
   padding: 0.4rem;
-  border: 2px solid #dc3545;
+  border: 2px solid var(--danger-color);
   border-radius: 6px;
-  background-color: rgba(220, 53, 69, 0.1);
-  color: white;
+  background-color: var(--input-bg);
+  color: var(--text-primary);
   text-align: center;
   font-weight: bold;
   transition: all 0.3s;
@@ -409,8 +422,7 @@
 
 .input-cantidad-eliminar:focus {
   outline: none;
-  border-color: #dc3545;
-  background-color: rgba(220, 53, 69, 0.2);
+  border-color: var(--danger-color);
   box-shadow: 0 0 8px rgba(220, 53, 69, 0.3);
 }
 
@@ -418,7 +430,7 @@
 .tabla-vacia {
   text-align: center;
   padding: 3rem;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
   width: 100%;
 }
 
@@ -427,24 +439,102 @@
   font-size: 1.1rem;
 }
 
-/* Scrollbar personalizado */
+/* Límite del plan */
+.limite-plan-info {
+  background: var(--card-bg);
+  border: 2px solid var(--table-border);
+  border-radius: 12px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.limite-texto {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.limite-label {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+.limite-valor {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  background: var(--card-bg-alt);
+  padding: 0.4rem 1rem;
+  border-radius: 8px;
+  border: 1px solid var(--table-border);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  box-shadow: 0 2px 6px rgba(255, 107, 53, 0.2);
+}
+
+.limite-barra-container {
+  width: 100%;
+  height: 12px;
+  background: var(--input-border);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.limite-barra-progreso {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.4s ease, background 0.3s ease;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.limite-advertencia {
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+  padding: 0.75rem 1rem;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.4);
+  border-radius: 8px;
+  color: #FCD34D;
+  font-size: 0.9rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 1.5;
+}
+
+[data-theme="light"] .limite-advertencia {
+  color: #92400e;
+}
+
+/* Scrollbar */
 .tabla-wrapper::-webkit-scrollbar {
   height: 8px;
   width: 8px;
 }
 
 .tabla-wrapper::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--card-bg);
   border-radius: 4px;
 }
 
 .tabla-wrapper::-webkit-scrollbar-thumb {
-  background: #FF6B35;
+  background: var(--accent-color);
   border-radius: 4px;
 }
 
 .tabla-wrapper::-webkit-scrollbar-thumb:hover {
-  background: #e85a2a;
+  background: var(--accent-hover);
 }
 
 /* Responsive */
@@ -466,154 +556,5 @@
   
   .tabla-productos {
     min-width: 800px;
-  }
-}
-/* Estilos para el indicador de límite del plan */
-
-.limite-plan-info {
-  background: linear-gradient(135deg, rgba(255, 107, 53, 0.1), rgba(255, 107, 53, 0.05));
-  border: 2px solid rgba(255, 107, 53, 0.3);
-  border-radius: 12px;
-  padding: 1.25rem;
-  margin-bottom: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.limite-texto {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.75rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.limite-label {
-  font-size: 0.95rem;
-  color: #9ca3af;
-  font-weight: 500;
-  letter-spacing: 0.3px;
-}
-
-.limite-valor {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #FF6B35;
-  background: rgba(255, 107, 53, 0.15);
-  padding: 0.4rem 1rem;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 107, 53, 0.3);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3rem;
-  box-shadow: 0 2px 6px rgba(255, 107, 53, 0.2);
-}
-
-.limite-barra-container {
-  width: 100%;
-  height: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  overflow: hidden;
-  position: relative;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.limite-barra-progreso {
-  height: 100%;
-  border-radius: 10px;
-  transition: width 0.4s ease, background 0.3s ease;
-  position: relative;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-}
-
-.limite-barra-progreso::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-.limite-advertencia {
-  margin-top: 0.75rem;
-  margin-bottom: 0;
-  padding: 0.75rem 1rem;
-  background: rgba(245, 158, 11, 0.15);
-  border: 1px solid rgba(245, 158, 11, 0.4);
-  border-radius: 8px;
-  color: #FCD34D;
-  font-size: 0.9rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  line-height: 1.5;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .limite-plan-info {
-    padding: 1rem;
-  }
-
-  .limite-texto {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .limite-label {
-    font-size: 0.875rem;
-  }
-
-  .limite-valor {
-    font-size: 1.1rem;
-    padding: 0.35rem 0.85rem;
-  }
-
-  .limite-advertencia {
-    font-size: 0.85rem;
-    padding: 0.65rem 0.85rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .limite-plan-info {
-    padding: 0.85rem;
-  }
-
-  .limite-label {
-    font-size: 0.8rem;
-  }
-
-  .limite-valor {
-    font-size: 1rem;
-    padding: 0.3rem 0.7rem;
-  }
-
-  .limite-barra-container {
-    height: 10px;
-  }
-
-  .limite-advertencia {
-    font-size: 0.8rem;
-    padding: 0.6rem 0.75rem;
   }
 }

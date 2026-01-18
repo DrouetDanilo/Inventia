@@ -1,11 +1,11 @@
 /* ============ DASHBOARD ============ */
 .dashboard-container {
   padding: 2rem;
-  color: white;
+  color: var(--text-primary);
 }
 
 .dashboard-title {
-  color: #FF6B35;
+  color: var(--accent-color);
   margin-bottom: 2rem;
   text-align: center;
   font-size: 2rem;
@@ -15,18 +15,22 @@
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--table-bg);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .dashboard-table {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
 }
 
 .dashboard-table-header {
-  background-color: #FF6B35;
+  background-color: var(--accent-color);
 }
 
 .dashboard-th {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--table-border);
   padding: 1rem;
   color: white;
   font-weight: bold;
@@ -49,21 +53,21 @@
 }
 
 .dashboard-table-row:hover {
-  background-color: rgba(255, 107, 53, 0.1);
+  background-color: var(--hover-bg);
 }
 
 .dashboard-row-even {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--card-bg);
 }
 
 .dashboard-row-odd {
-  background-color: rgba(255, 255, 255, 0.02);
+  background-color: var(--card-bg-alt);
 }
 
 .dashboard-td {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--table-border);
   padding: 1rem;
-  color: white;
+  color: var(--text-primary);
 }
 
 .dashboard-td-center {
@@ -75,10 +79,10 @@
 }
 
 .dashboard-loading {
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--table-border);
   padding: 3rem;
   text-align: center;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
 }
 
 /* ============ SEMÁFORO DE ESTADO ============ */
@@ -97,6 +101,10 @@
   position: relative;
 }
 
+[data-theme="light"] .semaforo-luz {
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
 .semaforo-brillo {
   position: absolute;
   top: 50%;
@@ -111,17 +119,19 @@
 .semaforo-texto {
   font-size: 10px;
   font-weight: 600;
+  color: var(--text-primary);
 }
 
 /* ============ STOCK DESTACADO ============ */
 .stock-destacado {
   font-weight: 700;
   font-size: 16px;
+  color: var(--text-primary);
 }
 
 .slots-maximos {
   font-weight: 600;
-  color: #7f8c8d;
+  color: var(--text-secondary);
 }
 
 /* ============ PORCENTAJE DE OCUPACIÓN ============ */
@@ -134,12 +144,13 @@
 
 .porcentaje-texto {
   font-weight: 600;
+  color: var(--text-primary);
 }
 
 .barra-progreso {
   width: 80px;
   height: 6px;
-  background-color: #ecf0f1;
+  background-color: var(--input-border);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -153,12 +164,13 @@
 .leyenda-semaforo {
   margin-top: 20px;
   padding: 15px;
-  background-color: #f8f9fa;
+  background-color: var(--card-bg);
   border-radius: 8px;
   display: flex;
   justify-content: center;
   gap: 30px;
   flex-wrap: wrap;
+  border: 1px solid var(--table-border);
 }
 
 .leyenda-item {
@@ -175,30 +187,29 @@
 
 .leyenda-texto {
   font-size: 14px;
-  color: #2c3e50;
+  color: var(--text-primary);
 }
 
 /* ============ NOTA INFORMATIVA ============ */
 .nota-info {
   margin-top: 15px;
   padding: 12px;
-  background-color: #fff9e6;
-  border-left: 4px solid #f39c12;
+  background-color: var(--card-bg-alt);
+  border-left: 4px solid var(--warning-color);
   border-radius: 4px;
 }
 
 .nota-info-texto {
   font-size: 13px;
-  color: #7f8c8d;
+  color: var(--text-secondary);
 }
-/* ============ PANEL DE CONTROL (INICIO) ============ */
 
-/* Fondo general de la página de dashboard */
+/* ============ PANEL DE CONTROL (INICIO) ============ */
 .dashboard-page {
   padding: 2rem;
-  background: #111827;        /* fondo oscuro */
+  background: var(--sidebar-bg);
   min-height: 100vh;
-  color: #f9fafb;
+  color: var(--text-primary);
   box-sizing: border-box;
 }
 
@@ -213,12 +224,13 @@
 .dashboard-main-title {
   margin: 0;
   font-size: 2rem;
+  color: var(--text-primary);
 }
 
 .dashboard-subtitle {
   margin-top: 0.25rem;
   font-size: 0.9rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
 }
 
 /* Chip de usuario arriba a la derecha */
@@ -226,21 +238,22 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  background: #1f2937;
+  background: var(--card-bg);
   padding: 0.5rem 1rem;
   border-radius: 999px;
+  border: 1px solid var(--table-border);
 }
 
 .dashboard-avatar {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #FF6B35;
+  background: var(--accent-color);
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  color: #111827;
+  color: white;
 }
 
 .dashboard-user-info {
@@ -251,14 +264,15 @@
 .dashboard-user-name {
   font-size: 0.9rem;
   font-weight: 600;
+  color: var(--text-primary);
 }
 
 .dashboard-user-email {
   font-size: 0.75rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
 }
 
-/* Tarjetas de resumen (categorías, productos, stock, ventas) */
+/* Tarjetas de resumen */
 .dashboard-cards-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -267,13 +281,18 @@
 }
 
 .dashboard-card {
-  background: #1f2937;
+  background: var(--card-bg);
   border-radius: 12px;
   padding: 1rem 1.25rem;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
+  border: 1px solid var(--table-border);
+}
+
+[data-theme="light"] .dashboard-card {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
 .card-icon {
@@ -284,22 +303,23 @@
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: #9ca3af;
+  color: var(--text-secondary);
 }
 
 .card-value {
   font-size: 1.6rem;
   font-weight: 700;
+  color: var(--text-primary);
 }
 
 .card-caption {
   font-size: 0.75rem;
-  color: #6b7280;
+  color: var(--text-secondary);
 }
 
 /* Bordes de color para cada tarjeta */
 .card-green {
-  border-left: 4px solid #00BA88;
+  border-left: 4px solid var(--success-color);
 }
 
 .card-blue {
@@ -307,14 +327,14 @@
 }
 
 .card-yellow {
-  border-left: 4px solid #F7B801;
+  border-left: 4px solid var(--warning-color);
 }
 
 .card-orange {
-  border-left: 4px solid #FF6B35;
+  border-left: 4px solid var(--accent-color);
 }
 
-/* Bloque central: productos más vendidos / últimas ventas */
+/* Bloque central */
 .dashboard-middle-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -323,19 +343,24 @@
 }
 
 .dashboard-box {
-  background: #1f2937;
+  background: var(--card-bg);
   border-radius: 12px;
   padding: 1.25rem;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+  border: 1px solid var(--table-border);
+}
+
+[data-theme="light"] .dashboard-box {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
 .dashboard-box-title {
   margin: 0 0 0.75rem;
   font-size: 1.1rem;
-  color: #FF6B35;
+  color: var(--accent-color);
 }
 
-/* Mini tablas del bloque central */
+/* Mini tablas */
 .dashboard-mini-table {
   width: 100%;
   border-collapse: collapse;
@@ -343,36 +368,33 @@
 }
 
 .dashboard-mini-table thead {
-  background: #111827;
+  background: var(--card-bg-alt);
 }
 
 .dashboard-mini-table th,
 .dashboard-mini-table td {
   padding: 0.5rem 0.75rem;
   text-align: left;
-  border-bottom: 1px solid #374151;
+  border-bottom: 1px solid var(--table-border);
 }
 
 .dashboard-mini-table th {
   font-weight: 600;
-  color: #e5e7eb;
+  color: var(--text-primary);
 }
 
 .dashboard-mini-table td {
-  color: #f9fafb;
+  color: var(--text-primary);
 }
 
 .dashboard-empty {
   font-size: 0.9rem;
-  color: #9ca3af;
+  color: var(--text-secondary);
 }
 
-/* Contenedor del bloque detalle (tu tabla semáforo) */
 .dashboard-detalle {
   margin-top: 0.5rem;
 }
-
-/* Reutilizamos .dashboard-title, .dashboard-table, etc. que ya definiste */
 
 /* Responsive */
 @media (max-width: 1024px) {
