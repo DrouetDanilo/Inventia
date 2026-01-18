@@ -1,0 +1,23 @@
+.asistente-card {
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  border-left: 6px solid #ff6b35;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+  margin-top: 2rem;
+}
+
+.asistente-card h3 {
+  margin-bottom: 1rem;
+  color: #7c2d12;
+}
+
+.asistente-card ul {
+  padding-left: 1.2rem;
+}
+
+.asistente-card li {
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+  color: #431407;
+}

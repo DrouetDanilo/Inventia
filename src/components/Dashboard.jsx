@@ -3,6 +3,7 @@ import "../styles/Dashboard.css"
 import { ref, onValue } from 'firebase/database'
 import { database } from '../config/firebase'
 
+
 function Dashboard({ user }) {
   const [catalogoProductos, setCatalogoProductos] = useState([])
   const [productosStock, setProductosStock] = useState([])

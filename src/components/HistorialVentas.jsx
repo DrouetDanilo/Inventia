@@ -13,6 +13,15 @@ import {
   ResponsiveContainer
 } from 'recharts'
 
+function KPI({ icon, label, value }) {
+  return (
+    <div className="kpi-card">
+      <span>{icon} {label}</span>
+      <strong>{value}</strong>
+    </div>
+  )
+}
+
 function HistorialVentas({ user }) {
   const [historialVentas, setHistorialVentas] = useState([])
   const [ventasFiltradas, setVentasFiltradas] = useState([])
@@ -26,7 +35,10 @@ function HistorialVentas({ user }) {
     const ventasRef = ref(database, `usuarios/${user.uid}/historialVentas`)
     onValue(ventasRef, snap => {
       const data = snap.val()
-      if (!data) return setHistorialVentas([])
+      if (!data) {
+        setHistorialVentas([])
+        return
+      }
       const lista = Object.keys(data).map(id => ({ id, ...data[id] }))
       lista.sort((a, b) => new Date(b.fechaVenta) - new Date(a.fechaVenta))
       setHistorialVentas(lista)
@@ -46,15 +58,15 @@ function HistorialVentas({ user }) {
     }
 
     if (filtroTiempo === 'semana') {
-      const i = new Date(hoy)
-      i.setDate(hoy.getDate() - hoy.getDay())
-      i.setHours(0, 0, 0, 0)
-      ventas = ventas.filter(v => new Date(v.fechaVenta) >= i)
+      const inicio = new Date(hoy)
+      inicio.setDate(hoy.getDate() - hoy.getDay())
+      inicio.setHours(0, 0, 0, 0)
+      ventas = ventas.filter(v => new Date(v.fechaVenta) >= inicio)
     }
 
     if (filtroTiempo === 'mes') {
-      const i = new Date(hoy.getFullYear(), hoy.getMonth(), 1)
-      ventas = ventas.filter(v => new Date(v.fechaVenta) >= i)
+      const inicio = new Date(hoy.getFullYear(), hoy.getMonth(), 1)
+      ventas = ventas.filter(v => new Date(v.fechaVenta) >= inicio)
     }
 
     setVentasFiltradas(ventas)
@@ -65,22 +77,19 @@ function HistorialVentas({ user }) {
   const generarResumen = ventas => {
     const map = {}
     ventas.forEach(v => {
-      const k = `${v.tipoProducto}-${v.marcaFabricante}`
-      if (!map[k]) {
-        map[k] = {
+      const key = `${v.tipoProducto}-${v.marcaFabricante}`
+      if (!map[key]) {
+        map[key] = {
           nombre: v.tipoProducto,
           marca: v.marcaFabricante,
           cantidad: 0,
           total: 0
         }
       }
-      map[k].cantidad++
-      map[k].total += Number(v.precio) || 0
+      map[key].cantidad++
+      map[key].total += Number(v.precio) || 0
     })
-
-    setResumenProductos(
-      Object.values(map).sort((a, b) => b.cantidad - a.cantidad)
-    )
+    setResumenProductos(Object.values(map).sort((a, b) => b.cantidad - a.cantidad))
   }
 
   /* ===== KPIs ===== */
@@ -90,7 +99,7 @@ function HistorialVentas({ user }) {
   const totalVentas = ventasFiltradas.length
   const ticketPromedio = totalVentas
     ? (totalIngresos / totalVentas).toFixed(2)
-    : 0
+    : '0.00'
 
   /* ===== GRAFICAS ===== */
   const graficaProductos = resumenProductos.map(p => ({
@@ -109,32 +118,19 @@ function HistorialVentas({ user }) {
   const top = resumenProductos[0]
   const peor = resumenProductos[resumenProductos.length - 1]
 
-  /* ===== JSX ===== */
   return (
     <div className="historial-container">
 
       <h2 className="historial-title">📊 Historial de Ventas</h2>
 
-      <div className="kpis-grid">
-        <div className="kpi-card">
-          <span>💰 Ingresos</span>
-          <strong>${totalIngresos.toFixed(2)}</strong>
-        </div>
-        <div className="kpi-card">
-          <span>🛒 Ventas</span>
-          <strong>{totalVentas}</strong>
-        </div>
-        <div className="kpi-card">
-          <span>📦 Productos</span>
-          <strong>{resumenProductos.length}</strong>
-        </div>
-        <div className="kpi-card">
-          <span>📈 Ticket</span>
-          <strong>${ticketPromedio}</strong>
-        </div>
-      </div>
+      <section className="kpis-grid">
+        <KPI icon="💰" label="Ingresos" value={`$${totalIngresos.toFixed(2)}`} />
+        <KPI icon="🛒" label="Ventas" value={totalVentas} />
+        <KPI icon="📦" label="Productos" value={resumenProductos.length} />
+        <KPI icon="📈" label="Ticket promedio" value={`$${ticketPromedio}`} />
+      </section>
 
-      <div className="historial-controles">
+      <section className="historial-controles">
         <select value={filtroTiempo} onChange={e => setFiltroTiempo(e.target.value)}>
           <option value="todo">Todo</option>
           <option value="dia">Día</option>
@@ -149,42 +145,42 @@ function HistorialVentas({ user }) {
             onChange={e => setFechaSeleccionada(e.target.value)}
           />
         )}
-      </div>
+      </section>
 
       {top && (
-        <div className="insights-box">
-          🔥 Más vendido: <strong>{top.nombre}</strong> ({top.cantidad}) |
+        <section className="insights-box">
+          🔥 Más vendido: <strong>{top.nombre}</strong> ({top.cantidad}) &nbsp;|&nbsp;
           ⚠️ Menos vendido: <strong>{peor.nombre}</strong> ({peor.cantidad})
-        </div>
+        </section>
       )}
 
-      <div className="graficas-grid">
+      <section className="graficas-grid">
         <div className="grafica-card">
-          <h4>Tendencia</h4>
-          <ResponsiveContainer width="100%" height={250}>
+          <h4>Tendencia de ingresos</h4>
+          <ResponsiveContainer width="100%" height={260}>
             <LineChart data={graficaTendencia}>
               <XAxis dataKey="dia" />
               <YAxis />
               <Tooltip />
-              <Line dataKey="total" stroke="#ff6b35" />
+              <Line dataKey="total" stroke="#ff6b35" strokeWidth={3} />
             </LineChart>
           </ResponsiveContainer>
         </div>
 
         <div className="grafica-card">
-          <h4>Productos</h4>
-          <ResponsiveContainer width="100%" height={250}>
+          <h4>Productos vendidos</h4>
+          <ResponsiveContainer width="100%" height={260}>
             <BarChart data={graficaProductos}>
               <XAxis dataKey="nombre" hide />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="vendidos" fill="#ff6b35" />
+              <Bar dataKey="vendidos" fill="#ff6b35" radius={[8, 8, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
-      </div>
+      </section>
 
-      <div className="tabla-card">
+      <section className="tabla-card">
         <table className="tabla-historial">
           <thead>
             <tr>
@@ -195,6 +191,13 @@ function HistorialVentas({ user }) {
             </tr>
           </thead>
           <tbody>
+            {ventasFiltradas.length === 0 && (
+              <tr>
+                <td colSpan="4" className="tabla-vacia">
+                  No hay ventas en este período
+                </td>
+              </tr>
+            )}
             {ventasFiltradas.map((v, i) => (
               <tr key={i}>
                 <td>{new Date(v.fechaVenta).toLocaleString('es-EC')}</td>
@@ -205,7 +208,7 @@ function HistorialVentas({ user }) {
             ))}
           </tbody>
         </table>
-      </div>
+      </section>
 
     </div>
   )
